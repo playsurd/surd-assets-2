@@ -1,41 +1,114 @@
+<!doctype html><html><head><meta charset="utf-8"><title>angry-birds-chrome</title><base href="https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/angry-birds-chrome/">
+<script>(function () {
+  var W = window;
+  var unityTarget = null;
+  function tellUnity(methods, arg) {
+    var inst = W.__surdUnity || W.unityInstance || W.gameInstance;
+    if (!inst || !inst.SendMessage || !unityTarget) return;
+    for (var i = 0; i < methods.length; i++) {
+      try { arg === undefined ? inst.SendMessage(unityTarget, methods[i]) : inst.SendMessage(unityTarget, methods[i], arg); }
+      catch (e) {  }
+    }
+  }
+  if (typeof W.initPokiBridge !== 'function') {
+    W.initPokiBridge = function (name) { unityTarget = name || unityTarget; };
+  }
+  if (typeof W.commercialBreak !== 'function') {
+    W.commercialBreak = function () { setTimeout(function () { tellUnity(['CommercialBreakComplete', 'commercialBreakComplete']); }, 0); };
+  }
+  if (typeof W.rewardedBreak !== 'function') {
+    W.rewardedBreak = function () { setTimeout(function () { tellUnity(['RewardedBreakComplete', 'rewardedBreakComplete'], 'false'); }, 0); };
+  }
+  var resolved = function () { return Promise.resolve(); };
+  if (!W.PokiSDK) {
+    W.PokiSDK = {
+      init: resolved, initPokiBridge: function () {}, setDebug: function () {},
+      gameLoadingStart: function () {}, gameLoadingFinished: function () {},
+      gameplayStart: function () {}, gameplayStop: function () {},
+      commercialBreak: resolved, rewardedBreak: function () { return Promise.resolve(false); },
+      happyTime: function () {}, customEvent: function () {}, captureError: function () {},
+      isAdBlocked: function () { return false; }, shareableURL: function () { return Promise.resolve(location.href); },
+      getURLParam: function (k) { try { return new URL(location.href).searchParams.get(k) || ''; } catch (e) { return ''; } },
+    };
+  }
+  if (!W.YaGames) {
+    var yPlayer = {
+      getName: function () { return 'player'; }, getUniqueID: function () { return 'local'; },
+      getData: function () { return Promise.resolve({}); }, setData: resolved,
+      getStats: function () { return Promise.resolve({}); }, setStats: resolved, incrementStats: resolved,
+      getMode: function () { return 'lite'; }, getPhoto: function () { return ''; },
+    };
+    var yLeaderboards = {
+      setLeaderboardScore: resolved,
+      getLeaderboardEntries: function () { return Promise.resolve({ entries: [] }); },
+      getLeaderboardPlayerEntry: function () { return Promise.reject(new Error('no entry')); },
+      getLeaderboardDescription: function () { return Promise.resolve({}); },
+    };
+    var ySdk = {
+      adv: {
+        showFullscreenAdv: function (o) { var c = o && o.callbacks; if (c && c.onClose) setTimeout(function () { c.onClose(false); }, 0); },
+        showRewardedVideo: function (o) { var c = o && o.callbacks; if (c && c.onClose) setTimeout(function () { c.onClose(); }, 0); },
+        getBannerAdvStatus: function () { return Promise.resolve({ stickyAdvIsShowing: false }); },
+      },
+      getPlayer: function () { return Promise.resolve(yPlayer); },
+      getPayments: function () { return Promise.resolve({
+        getCatalog: function () { return Promise.resolve([]); },
+        getPurchases: function () { return Promise.resolve([]); },
+        purchase: function () { return Promise.reject(new Error('payments unavailable')); },
+        consumePurchase: resolved,
+      }); },
+      getFlags: function () { return Promise.resolve({}); },
+      getStorage: function () { return Promise.resolve(window.localStorage); },
+      clipboard: { writeText: resolved },
+      shortcut: { canShowPrompt: function () { return Promise.resolve({ canShow: false }); }, showPrompt: function () { return Promise.resolve({ outcome: 'rejected' }); } },
+      feedback: { canReview: function () { return Promise.resolve({ value: false }); }, requestReview: function () { return Promise.resolve({ feedbackSent: false }); } },
+      getLeaderboards: function () { return Promise.resolve(yLeaderboards); },
+      features: { LoadingAPI: { ready: function () {} } },
+      screen: { fullscreen: { request: resolved, exit: resolved } },
+      isAvailableMethod: function () { return Promise.resolve(false); },
+      environment: { i18n: { lang: 'en' }, app: { id: 'local' } },
+      deviceInfo: { isDesktop: function () { return true; }, isMobile: function () { return false; },
+                    isTablet: function () { return false; }, isTV: function () { return false; },
+                    type: 'desktop' },
+    };
+    W.YaGames = { init: function () { return Promise.resolve(ySdk); } };
+    W.ysdk = ySdk;
+  }
+  if (!W.ytgame) {
+    var ytNoop = function () {};
+    W.ytgame = {
+      IN_PLAYABLES_ENV: false,
+      game: { firstFrameReady: ytNoop, gameReady: ytNoop, loadData: function () { return Promise.resolve(''); },
+              saveData: function () { return Promise.resolve(); }, isPaused: function () { return false; } },
+      system: { getLanguage: function () { return 'en'; }, isAudioEnabled: function () { return true; },
+                onAudioEnabledChange: ytNoop, onPause: ytNoop, onResume: ytNoop },
+      health: { logError: ytNoop, logWarning: ytNoop },
+      engagement: { sendScore: function () { return Promise.resolve(); } },
+      ads: { requestInterstitialAd: function () { return Promise.resolve(); } },
+    };
+  }
+  if (!W.GamePix) {
+    W.GamePix = { init: function () {}, ping: function () {}, gameLoadingStart: function () {}, gameLoadingFinished: function () {},
+                  interstitialAd: resolved, rewardAd: function () { return Promise.resolve(false); }, happyMoment: function () {} };
+  }
+  if (!W.CrazyGames) {
+    var noop = function () {};
+    W.CrazyGames = { SDK: {
+      init: resolved, game: { gameplayStart: noop, gameplayStop: noop, loadingStart: noop, loadingStop: noop, happytime: noop },
+      ad: { requestAd: function (t, cb) { if (cb && cb.adFinished) cb.adFinished(); }, hasAdblock: function () { return Promise.resolve(false); } },
+      user: { getUser: function () { return Promise.resolve(null); } },
+      banner: { requestBanner: resolved, clearAllBanners: noop },
+    } };
+  }
+})();
+if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){};</script></head><body>
 
-<!DOCTYPE html>
-
-
-
-
-
-
-
-
-
-
-
-<html>
-  <head>
-    <base href="./">
-    <title>Angry Birds Chrome</title>
-    <meta name="Title" content="Angry Birds Chrome">
-    <meta name="description" content="Play Angry Birds online in HD with Google Chrome">
-    <meta name="keywords" content="angry birds, free angry birds, online game, play online, angry birds app, chrome, google chrome, web browser, HD, arcade game, online, play angry birds online, web, application, game, iphone, android, ipad, slingshot, catapult, explosions, golden egg, levels, pigs, birds, stars, high scores, chrome os, chrome web store, angry birds rovio, play angry birds on computer, apps for chrome, play angry birds free">
-    <link href='http://fonts.googleapis.com/css?family=Terminal+Dosis:800' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/angry_birds_chrome.css" type="text/css">
-    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/aknpkdffaafgjchaibgeefbgmgeghloj">
-    
-
-    
-
-    <script>
+<script>
         function externalLink(type) {
             _gaq.push(['_trackEvent', 'Promo', 'Promotional Link: ' + type]);
         }
     </script>
-
-    
-      <script type="text/javascript" src="fowl/fowl.nocache.js"></script>
-    
-    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-    <script type="text/javascript">
+<script>
       google.load('payments', '1.0', {
           'packages': [
           
@@ -44,26 +117,7 @@
           ]
       });
     </script>
-  <style>
-
-
-
-
-.sidebar-frame {
-  width: 160px;
-  height: 600px;
-  border: none;
-  display: block;
-}
-</style>
-</head>
-  <body>
-    
-
-    
-
-    
-      <script type="text/javascript">
+<script>
         function getFlashVersion() {
             try {
                 var version;
@@ -96,15 +150,7 @@
           
         }
       </script>
-    
-  
-    
-    
-    
-    
-    
-
-      <script type="text/javascript">
+<script>
         if (!haveAudioSupport()) {
           url = window.location.href;
 
@@ -122,34 +168,7 @@
           window.location.href = url;
         }
       </script>
-
-      
-
-          <table class="content-table">
-            <tr>
-              <td>
-
-          <div class="gamecont" id="content">
-            <div id='loginInfo'></div>
-            
-            <div id='gameDiv' style="display: inline-block;">
-              <div id='playn-root'>
-                <div id="loading">
-                  <img src="/images/loading_image_bird.png" />
-                </div>
-              </div>
-              <div id="rovionews"></div>
-              <div id="videochapter"></div>              
-              <div id="ingameframecontainer"></div>
-              <div id="cornerframecontainer1"></div>
-            </div>
-            <div class='buttons'>
-              <div class='buttoncontainer'>
-                
-                <div id='version-buttons'></div>
-
-                
-                <script type="text/javascript">
+<script>
                   installSuccess = function() {
                     document.getElementById("installButton").id = "offlineInstalled";
                     _gaq.push(['_trackEvent', 'InstalledApp', 'New install']);
@@ -165,41 +184,12 @@
                     }
                   }
                 </script>
-                <a id='installButton' href='https://chrome.google.com/webstore/detail/aknpkdffaafgjchaibgeefbgmgeghloj' onclick="attemptInstall(); return false;" onmouseover="tooltip.innerHTML = 'Installing the game allows offline play. Crush pigs wherever you are!'" onmouseout="resetTooltip();"></a>
-
-                
-                <a href="#" class="loginButton" id="login"></a>
-                <a href="http://www.rovio.com/en/support/faq&support_category_id=36" id="faqButton" onmouseover="tooltip.innerHTML = 'Frequently Asked Questions'" onmouseout="resetTooltip();" onclick="externalLink('FAQ'); window.open('http://www.rovio.com/en/support/faq&support_category_id=36', '_blank'); return false;"></a>
-
-              </div>
-              
-              
-              <div id='social-container'>
-                <a id="twitterButton" href="https://twitter.com/share" class="twitter-share-button">Tweet</a><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-                <iframe id="fb-like-iframe" src="http://www.facebook.com/plugins/like.php?app_id=167680559959348&href=http%3A%2F%2Fwww.facebook.com%2Fangrybirds&send=false&layout=button_count&ref=chrome.angrybirds.com&width=100&show_faces=false&action=like&colorscheme=dark&font&height=25"
-                scrolling="no" frameborder="0" style="visibility: hidden; border:none; overflow:hidden; width:160px; height:25px;" allowTransparency="true"></iframe>
-                <a href="https://www.google.com/chrome" id="optimized" onclick="externalLink('Optimized for Chrome'); window.open('https://www.google.com/chrome', '_blank'); return false;"></a>
-              </div>
-
-              
-              <div id='tooltip'></div>
-              <script type="text/javascript">
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script>
                 tooltip = document.getElementById('tooltip');
                 resetTooltip = function() { tooltip.innerHTML = ""; }
              </script>
-            </div>
-          </div>
-
-            </td>
-            </tr>
-          </table>
-
-      
-      
-      
-        
-        <iframe id='appcacheInstaller' style="display: none;"></iframe>
-        <script type="text/javascript">
+<script>
           var addIframe = false;
           if (window.chrome && window.chrome.app && window.chrome.app.isInstalled) {
             addIframe = true;
@@ -216,25 +206,7 @@
             document.getElementById('appcacheInstaller').src = 'http://chrome.angrybirds.com/AppCacheInstaller.html';
           }
         </script>
-
-        
-          
-          <iframe style='display: none;' src='http://chrome.angrybirds.com/AppCacheUninstaller.jsp?path=/angrybirds/appcache.nocache.manifest'></iframe>
-          <iframe style='display: none;' src='http://chrome.angrybirds.com/AppCacheUninstaller.jsp?path=/angrybirds111/appcache.nocache.manifest'></iframe>
-          <iframe style='display: none;' src='http://chrome.angrybirds.com/AppCacheUninstaller.jsp?path=/angrybirds112/appcache.nocache.manifest'></iframe>
-        
-
-      
-
-    
-    <noscript>
-      <div class="info-noscript">
-        Your web browser must have JavaScript enabled
-        in order for this application to display correctly.
-      </div>
-    </noscript>
-
-    <script type="text/javascript">
+<script>
       if (window.self != window.top && window.top.location.host.match("^[a-zA-Z]*\.angrybirds\.com") == null) {
         setInterval(function() {
                          var content = document.getElementById('content');
@@ -244,6 +216,7 @@
                     }, 500);
       }
     </script>
-
-  </body>
-</html>
+<script src="https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/angry-birds-chrome/fowl/fowl.nocache.js"></script>
+<script>window.SURD_GAME = {"id":"angry-birds-chrome","engine":"ruffle","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/angry-birds-chrome/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v78db416e72/","files":{"swf":{"path":"fowl/gwt-voices.swf"}},"config":{}};</script>
+<script src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v78db416e72/runtime.js"></script>
+</body></html>
