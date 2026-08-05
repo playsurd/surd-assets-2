@@ -1,4 +1,77 @@
 <!doctype html><html><head><meta charset="utf-8"><title>traffic-racer</title></head><body>
-<script>window.SURD_GAME = {"id":"traffic-racer","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/traffic-racer/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v22896bd64c/","files":{"data":{"path":"Build/6d41885525432ff3b29106e00c136a2e.data.br","parts":[".sp0",".sp1",".sp2"],"mime":"application/octet-stream"},"framework":{"path":"Build/97bcf5a3640d35b4615548522a7c02fa.framework.js"},"code":{"path":"Build/253cc6f68dece82b7c6005da0838880d.wasm.br","parts":[".sp0",".sp1",".sp2"],"mime":"application/octet-stream"}},"config":{"era":"modern","loaderJs":"Build/7a2dbded24d57e056180125b1583e7c4.loader.js","companyName":"madkidgames.com","productName":"Traffic Racer","productVersion":"1.0"}};</script>
-<script src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v22896bd64c/runtime.js"></script>
+<div id="unity-container" class="unity-desktop" style="position:absolute;inset:0"><canvas id="unity-canvas" style="width:100vw;height:100vh;display:block"></canvas><div id="loading-cover" style="display:none"></div><div id="unity-loading-bar" style="display:none"><div id="unity-logo"></div><div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div></div><div id="unity-footer"><div id="unity-webgl-logo"></div><div id="unity-fullscreen-button"></div><div id="unity-build-title"></div></div></div>
+<script>window.__surdBoot={cui:window.createUnityInstance,ul:window.UnityLoader,en:window.Engine};window.createUnityInstance=function(){return new Promise(function(){})};window.UnityLoader={instantiate:function(){}};window.Engine=function(){};window.godotRunStart=function(){};</script><script>var loadingText = document.querySelector("#loading-text");
+    let totalBytes = 0;
+    let loadedBytes = 0;
+
+    async function fetchWithProgress(url) {
+      const response = await fetch(url);
+      const reader = response.body.getReader();
+      let chunks = [];
+      let received = 0;
+      while (true) {
+        const {
+          done,
+          value
+        } = await reader.read();
+        if (done) break;
+        received += value.length;
+        loadedBytes += value.length;
+        chunks.push(value);
+        let mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
+        let mbTotal = '87.7';
+        loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
+      }
+      let fullBuffer = new Uint8Array(received);
+      let offset = 0;
+      for (let chunk of chunks) {
+        fullBuffer.set(chunk, offset);
+        offset += chunk.length;
+      }
+      return fullBuffer.buffer;
+    }
+    async function mergeFiles(fileParts, cacheKey) {
+      const buffers = await Promise.all(
+        fileParts.map(part => fetchWithProgress(part))
+      );
+       const mergedBlob = new Blob(buffers);
+      return URL.createObjectURL(mergedBlob);
+    }
+
+    function getParts(file, start, end) {
+      let parts = [];
+      for (let i = start; i <= end; i++) {
+        parts.push(file + ".part" + i);
+      }
+      return parts;
+    }
+    (async () => {
+      const [dataUrl, wasmUrl] = await Promise.all([
+        mergeFiles(getParts("Build/6d41885525432ff3b29106e00c136a2e.data.br", 1, 3), "6d41885525432ff3b29106e00c136a2e.data.br"),
+        mergeFiles(getParts("Build/253cc6f68dece82b7c6005da0838880d.wasm.br", 1, 3), "253cc6f68dece82b7c6005da0838880d.wasm.br"),
+      ]);
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var phoneScreenFixer = document.createElement('meta');
+        phoneScreenFixer.name = 'viewport';
+        phoneScreenFixer.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(phoneScreenFixer);
+      }
+
+      var hugeCanvas = document.querySelector("#unity-canvas");
+
+      createUnityInstance(hugeCanvas, {
+        dataUrl: dataUrl,
+        frameworkUrl: "Build/97bcf5a3640d35b4615548522a7c02fa.framework.js",
+        codeUrl: wasmUrl,
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "madkidgames.com",
+        productName: "Traffic Racer",
+        productVersion: "1.0",
+      });
+      loadingText.remove();
+    })();
+  </script><script>window.createUnityInstance=window.__surdBoot.cui;window.UnityLoader=window.__surdBoot.ul;window.Engine=window.__surdBoot.en;delete window.godotRunStart;</script>
+
+<script>window.SURD_GAME = {"id":"traffic-racer","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/traffic-racer/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v2f29c73163/","files":{"data":{"path":"Build/6d41885525432ff3b29106e00c136a2e.data.br","parts":[".sp0",".sp1",".sp2"],"bytes":47017340,"mime":"application/octet-stream"},"framework":{"path":"Build/97bcf5a3640d35b4615548522a7c02fa.framework.js"},"code":{"path":"Build/253cc6f68dece82b7c6005da0838880d.wasm.br","parts":[".sp0",".sp1",".sp2"],"bytes":42000092,"mime":"application/octet-stream"}},"config":{"era":"modern","loaderJs":"Build/7a2dbded24d57e056180125b1583e7c4.loader.js","companyName":"madkidgames.com","productName":"Traffic Racer","productVersion":"1.0"}};</script>
+<script src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v2f29c73163/runtime.js"></script>
 </body></html>
