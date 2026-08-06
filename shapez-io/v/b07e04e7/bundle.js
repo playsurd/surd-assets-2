@@ -49740,7 +49740,7 @@
       setTimeout(() => e(!1), 30);
     }
     function wrapper_ref2(e) {
-      fetch("https://googleads.g.doubleclick.net/pagead/id", {
+      fetch("https://removed.invalid/pagead/id", {
         method: "HEAD",
         mode: "no-cors",
       })
@@ -62526,7 +62526,7 @@
     function _fetchPlayerCount() {
       var e = this.htmlElement.querySelector(".onlinePlayerCount");
       e &&
-        fetch("https://analytics.shapez.io/v1/player-count", {
+        fetch("https://removed.invalid/v1/player-count", {
           cache: "no-cache",
         })
           .then(main_menu_ref3)
@@ -63008,7 +63008,7 @@
     }
     async function _fetchDiscounts() {
       await Object(v.L)(
-        fetch("https://analytics.shapez.io/v1/discounts")
+        fetch("https://removed.invalid/v1/discounts")
           .then(preload_ref)
           .then(preload_ref2),
         2e3
@@ -63023,7 +63023,7 @@
     async function _sendBeacon() {
       qi.campaign &&
         fetch(
-          "https://analytics.shapez.io/campaign/" +
+          "https://removed.invalid/campaign/" +
             qi.campaign +
             "?lpurl=nocontent&fbclid=" +
             (qi.fbclid || "") +
@@ -63032,7 +63032,7 @@
         ).catch(preload_ref4),
         qi.embedProvider &&
           fetch(
-            "https://analytics.shapez.io/campaign/embed_" +
+            "https://removed.invalid/campaign/embed_" +
               qi.embedProvider +
               "?lpurl=nocontent"
           ).catch(preload_ref5);
@@ -63465,7 +63465,7 @@
       }
     }
     var sc = Object(l.a)("game_analytics"),
-      cc = "https://analytics.shapez.io",
+      cc = "https://removed.invalid",
       lc = "shapez_token_123.bin",
       uc = "abt_bsl2",
       hc = 1;
@@ -63495,7 +63495,7 @@
     function _note(e) {
       this.app.restrictionMgr.isLimitedVersion() &&
         fetch(
-          "https://analytics.shapez.io/campaign/action_" +
+          "https://removed.invalid/campaign/action_" +
             this.environment +
             "_" +
             e +
@@ -63533,7 +63533,7 @@
             setInterval(() => this.sendTimePoints(), 6e4),
             this.app.restrictionMgr.isLimitedVersion() &&
               fetch(
-                "https://analytics.shapez.io/campaign/" +
+                "https://removed.invalid/campaign/" +
                   this.environment +
                   "_" +
                   uc +
