@@ -105,6 +105,16 @@
     } };
   }
 })();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
 if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};</script></head><body>
 <div id="unity-container" class="unity-desktop" style="position:absolute;inset:0"><canvas id="unity-canvas" style="width:100vw;height:100vh;display:block"></canvas><div id="loading-cover" style="display:none"></div><div id="unity-loading-bar" style="display:none"><div id="unity-logo"></div><div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div></div><div id="unity-footer"><div id="unity-webgl-logo"></div><div id="unity-fullscreen-button"></div><div id="unity-build-title"></div></div></div>
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/growden-io/s/cursor.js"></script>
@@ -555,6 +565,6 @@ if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this
         navigator.serviceWorker.register('s/sw.js');
       });
     }</script>
-<script>window.SURD_GAME = {"id":"growden-io","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/growden-io/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/","files":{"data":{"path":"Build/a7371a7fda98b71ac1cfdee56a79772b.data","bytes":11345084,"mime":"application/octet-stream"},"framework":{"path":"Build/713c295cbe0e74345cd32a235900a34f.framework.js","bytes":454883,"mime":"text/javascript"},"code":{"path":"Build/3ccec5462abb1bddeb508a23f3ef9d51.wasm","parts":[".sp0",".sp1"],"bytes":25728945,"mime":"application/wasm"}},"config":{"era":"modern","loaderJs":"Build/88e4e230596a7f739263fc16965e0da7.loader.js","companyName":"LEGiON Platforms","productName":"Growden.io","productVersion":"17z53627584"}};</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/runtime.js"></script>
+<script>window.SURD_GAME = {"id":"growden-io","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/growden-io/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v73b6add486/","files":{"data":{"path":"Build/a7371a7fda98b71ac1cfdee56a79772b.data","bytes":11345084,"mime":"application/octet-stream"},"framework":{"path":"Build/713c295cbe0e74345cd32a235900a34f.framework.js","bytes":454883,"mime":"text/javascript"},"code":{"path":"Build/3ccec5462abb1bddeb508a23f3ef9d51.wasm","parts":[".sp0",".sp1"],"bytes":25728945,"mime":"application/wasm"}},"config":{"era":"modern","loaderJs":"Build/88e4e230596a7f739263fc16965e0da7.loader.js","companyName":"LEGiON Platforms","productName":"Growden.io","productVersion":"17z53627584"}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v73b6add486/runtime.js"></script>
 </body></html>
