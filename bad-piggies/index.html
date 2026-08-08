@@ -105,6 +105,16 @@
     } };
   }
 })();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
 if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};</script></head><body>
 <div id="unity-container" class="unity-desktop" style="position:absolute;inset:0"><canvas id="unity-canvas" style="width:100vw;height:100vh;display:block"></canvas><div id="loading-cover" style="display:none"></div><div id="unity-loading-bar" style="display:none"><div id="unity-logo"></div><div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div></div><div id="unity-footer"><div id="unity-webgl-logo"></div><div id="unity-fullscreen-button"></div><div id="unity-build-title"></div></div></div>
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/bad-piggies/TemplateData/UnityProgress.js"></script>
@@ -113,6 +123,6 @@ if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this
 			onProgress: UnityProgress
 		});
 	</script><script>window.createUnityInstance=window.__surdBoot.cui;window.UnityLoader=window.__surdBoot.ul;window.Engine=window.__surdBoot.en;delete window.godotRunStart;</script>
-<script>window.SURD_GAME = {"id":"bad-piggies","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/bad-piggies/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/","files":{"data":{"path":"Build/Bad Piggies.data.unityweb","parts":[".sp0",".sp1"],"bytes":18984577,"mime":"application/octet-stream"},"code":{"path":"Build/Bad Piggies.wasm.code.unityweb","parts":[".sp0",".sp1"],"bytes":24947179,"mime":"application/wasm"},"framework":{"path":"Build/Bad Piggies.wasm.framework.unityweb","bytes":96517,"mime":"application/octet-stream"}},"config":{"era":"legacy","variant":"wasm","loaderJs":"Build/UnityLoader.js","instantiate":"url","unityConfig":{"companyName":"Rovio Entertainment Ltd.","productName":"Bad Piggies","TOTAL_MEMORY":268435456,"graphicsAPI":["WebGL 2.0","WebGL 1.0"],"webglContextAttributes":{"preserveDrawingBuffer":false},"splashScreenStyle":"Dark","backgroundColor":"#231F20","cacheControl":{"default":"must-revalidate"}},"progressJs":"TemplateData/UnityProgress.js","companyName":"surd","productName":"bad-piggies","totalMemory":268435456}};</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/runtime.js"></script>
+<script>window.SURD_GAME = {"id":"bad-piggies","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/bad-piggies/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v73b6add486/","files":{"data":{"path":"Build/Bad Piggies.data.unityweb","parts":[".sp0",".sp1"],"bytes":18984577,"mime":"application/octet-stream"},"code":{"path":"Build/Bad Piggies.wasm.code.unityweb","parts":[".sp0",".sp1"],"bytes":24947179,"mime":"application/wasm"},"framework":{"path":"Build/Bad Piggies.wasm.framework.unityweb","bytes":96517,"mime":"application/octet-stream"}},"config":{"era":"legacy","variant":"wasm","loaderJs":"Build/UnityLoader.js","instantiate":"url","unityConfig":{"companyName":"Rovio Entertainment Ltd.","productName":"Bad Piggies","TOTAL_MEMORY":268435456,"graphicsAPI":["WebGL 2.0","WebGL 1.0"],"webglContextAttributes":{"preserveDrawingBuffer":false},"splashScreenStyle":"Dark","backgroundColor":"#231F20","cacheControl":{"default":"must-revalidate"}},"progressJs":"TemplateData/UnityProgress.js","companyName":"surd","productName":"bad-piggies","totalMemory":268435456}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v73b6add486/runtime.js"></script>
 </body></html>
