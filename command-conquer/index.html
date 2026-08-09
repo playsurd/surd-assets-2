@@ -110,9 +110,19 @@
     } };
   }
 })();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
 if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};</script>
-<script>window.SURD_GAME={"id":"command-conquer","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/command-conquer/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/","files":{},"config":{}};</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/runtime.js"></script>
+<script>window.SURD_GAME={"id":"command-conquer","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/command-conquer/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/","files":{},"config":{}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/runtime.js"></script>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title></title>
@@ -160,11 +170,11 @@ if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this
 
 <body>
     <canvas id="canvas" style="width: 50%; height: 50%; display: block; margin: 0 auto;" onClick="window.focus();" />
-    <script type="text/javascript" src="js/es6-promise.js"></script>
-    <script type="text/javascript" src="js/browserfs.min.js"></script>
-    <script type="text/javascript" src="js/loader.js"></script>
-    <!--<script src="../../../c/libs/jquery.min.js"></script>-->
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script crossorigin="anonymous" type="text/javascript" src="js/es6-promise.js"></script>
+    <script crossorigin="anonymous" type="text/javascript" src="js/browserfs.min.js"></script>
+    <script crossorigin="anonymous" type="text/javascript" src="js/loader.js"></script>
+    <!--<script crossorigin="anonymous" src="../../../c/libs/jquery.min.js"></script>-->
+    <script crossorigin="anonymous" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
     <script type="text/javascript">
         function $_GET(param) {
