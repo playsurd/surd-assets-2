@@ -108,9 +108,19 @@
     } };
   }
 })();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
 if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};</script>
-<script>window.SURD_GAME={"id":"friday-night-funkin-vs-tricky","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/friday-night-funkin-vs-tricky/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/","files":{},"config":{}};</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/runtime.js"></script>
+<script>window.SURD_GAME={"id":"friday-night-funkin-vs-tricky","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/friday-night-funkin-vs-tricky/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/","files":{},"config":{}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/runtime.js"></script>
 
 	
 	<meta charset="utf-8">
@@ -124,7 +134,7 @@ if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this
 	<link rel="shortcut icon" type="image/png" href="./favicon.png">
 	
 	
-	<script type="text/javascript" src="./Vs. Tricky.js?20210817"></script>
+	<script crossorigin="anonymous" type="text/javascript" src="./Vs. Tricky.js?20210817"></script>
 	
 	<script>
 		window.addEventListener ("touchmove", function (event) { event.preventDefault (); }, { capture: false, passive: false });
