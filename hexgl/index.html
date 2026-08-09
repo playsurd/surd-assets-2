@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+<base href="https://cdn.jsdelivr.net/gh/playsurd/surd-assets@main/hexgl/">
+<script>(function () {
+  var W = window;
+  var unityTarget = null;
+  function tellUnity(methods, arg) {
+    var inst = W.__surdUnity || W.unityInstance || W.gameInstance;
+    if (!inst || !inst.SendMessage || !unityTarget) return;
+    for (var i = 0; i < methods.length; i++) {
+      try { arg === undefined ? inst.SendMessage(unityTarget, methods[i]) : inst.SendMessage(unityTarget, methods[i], arg); }
+      catch (e) {  }
+    }
+  }
+  if (typeof W.initPokiBridge !== 'function') {
+    W.initPokiBridge = function (name) { unityTarget = name || unityTarget; };
+  }
+  if (typeof W.commercialBreak !== 'function') {
+    W.commercialBreak = function () { setTimeout(function () { tellUnity(['CommercialBreakComplete', 'commercialBreakComplete']); }, 0); };
+  }
+  if (typeof W.rewardedBreak !== 'function') {
+    W.rewardedBreak = function () { setTimeout(function () { tellUnity(['RewardedBreakComplete', 'rewardedBreakComplete'], 'false'); }, 0); };
+  }
+  var resolved = function () { return Promise.resolve(); };
+  if (!W.PokiSDK) {
+    W.PokiSDK = {
+      init: resolved, initPokiBridge: function () {}, setDebug: function () {},
+      gameLoadingStart: function () {}, gameLoadingFinished: function () {},
+      gameLoadingProgress: function () {},
+      gameplayStart: function () {}, gameplayStop: function () {},
+      commercialBreak: resolved, rewardedBreak: function () { return Promise.resolve(false); },
+      happyTime: function () {}, customEvent: function () {}, captureError: function () {},
+      isAdBlocked: function () { return false; }, shareableURL: function () { return Promise.resolve(location.href); },
+      getURLParam: function (k) { try { return new URL(location.href).searchParams.get(k) || ''; } catch (e) { return ''; } },
+    };
+  }
+  if (!W.YaGames) {
+    var yPlayer = {
+      getName: function () { return 'player'; }, getUniqueID: function () { return 'local'; },
+      getData: function () { return Promise.resolve({}); }, setData: resolved,
+      getStats: function () { return Promise.resolve({}); }, setStats: resolved, incrementStats: resolved,
+      getMode: function () { return 'lite'; }, getPhoto: function () { return ''; },
+    };
+    var yLeaderboards = {
+      setLeaderboardScore: resolved,
+      getLeaderboardEntries: function () { return Promise.resolve({ entries: [] }); },
+      getLeaderboardPlayerEntry: function () { return Promise.reject(new Error('no entry')); },
+      getLeaderboardDescription: function () { return Promise.resolve({}); },
+    };
+    var ySdk = {
+      adv: {
+        showFullscreenAdv: function (o) { var c = o && o.callbacks; if (c && c.onClose) setTimeout(function () { c.onClose(false); }, 0); },
+        showRewardedVideo: function (o) { var c = o && o.callbacks; if (c && c.onClose) setTimeout(function () { c.onClose(); }, 0); },
+        getBannerAdvStatus: function () { return Promise.resolve({ stickyAdvIsShowing: false }); },
+      },
+      getPlayer: function () { return Promise.resolve(yPlayer); },
+      getPayments: function () { return Promise.resolve({
+        getCatalog: function () { return Promise.resolve([]); },
+        getPurchases: function () { return Promise.resolve([]); },
+        purchase: function () { return Promise.reject(new Error('payments unavailable')); },
+        consumePurchase: resolved,
+      }); },
+      getFlags: function () { return Promise.resolve({}); },
+      getStorage: function () { return Promise.resolve(window.localStorage); },
+      clipboard: { writeText: resolved },
+      shortcut: { canShowPrompt: function () { return Promise.resolve({ canShow: false }); }, showPrompt: function () { return Promise.resolve({ outcome: 'rejected' }); } },
+      feedback: { canReview: function () { return Promise.resolve({ value: false }); }, requestReview: function () { return Promise.resolve({ feedbackSent: false }); } },
+      getLeaderboards: function () { return Promise.resolve(yLeaderboards); },
+      features: { LoadingAPI: { ready: function () {} } },
+      screen: { fullscreen: { request: resolved, exit: resolved } },
+      isAvailableMethod: function () { return Promise.resolve(false); },
+      environment: { i18n: { lang: 'en' }, app: { id: 'local' } },
+      deviceInfo: { isDesktop: function () { return true; }, isMobile: function () { return false; },
+                    isTablet: function () { return false; }, isTV: function () { return false; },
+                    type: 'desktop' },
+    };
+    W.YaGames = { init: function () { return Promise.resolve(ySdk); } };
+    W.ysdk = ySdk;
+  }
+  if (!W.ytgame) {
+    var ytNoop = function () {};
+    W.ytgame = {
+      IN_PLAYABLES_ENV: false,
+      game: { firstFrameReady: ytNoop, gameReady: ytNoop, loadData: function () { return Promise.resolve(''); },
+              saveData: function () { return Promise.resolve(); }, isPaused: function () { return false; } },
+      system: { getLanguage: function () { return 'en'; }, isAudioEnabled: function () { return true; },
+                onAudioEnabledChange: ytNoop, onPause: ytNoop, onResume: ytNoop },
+      health: { logError: ytNoop, logWarning: ytNoop },
+      engagement: { sendScore: function () { return Promise.resolve(); } },
+      ads: { requestInterstitialAd: function () { return Promise.resolve(); } },
+    };
+  }
+  if (typeof document !== 'undefined' && document.xURL === undefined) {
+    try { document.xURL = 'https://poki.com/'; } catch (e) {  }
+  }
+  if (!W.GamePix) {
+    W.GamePix = { init: function () {}, ping: function () {}, gameLoadingStart: function () {}, gameLoadingFinished: function () {},
+                  interstitialAd: resolved, rewardAd: function () { return Promise.resolve(false); }, happyMoment: function () {} };
+  }
+  if (!W.CrazyGames) {
+    var noop = function () {};
+    W.CrazyGames = { SDK: {
+      init: resolved, game: { gameplayStart: noop, gameplayStop: noop, loadingStart: noop, loadingStop: noop, happytime: noop },
+      ad: { requestAd: function (t, cb) { if (cb && cb.adFinished) cb.adFinished(); }, hasAdblock: function () { return Promise.resolve(false); } },
+      user: { getUser: function () { return Promise.resolve(null); } },
+      banner: { requestBanner: resolved, clearAllBanners: noop },
+    } };
+  }
+})();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
+if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};
+window.alert=function(){};window.confirm=function(){return false;};window.prompt=function(){return null;};</script>
+<script>window.SURD_GAME={"id":"hexgl","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets@main/hexgl/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vae8e0b73b4/","files":{},"config":{}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vae8e0b73b4/runtime.js"></script>
+
+
+<script crossorigin="anonymous" src="/js/all.min.js" async></script>
+
+
+    <title>HexGL by BKcore</title>
+    <meta charset="utf-8">
+    <meta name="description" content="HexGL is a futuristic racing game built by Thibaut Despoulain (BKcore) using HTML5, Javascript and WebGL. Come challenge your friends on this fast-paced 3D game!">
+    <meta property="og:title" content="HexGL, the HTML5 futuristic racing game." />
+    <meta property="og:type" content="game" />
+    <meta property="og:url" content="http://hexgl.bkcore.com/" />
+    <meta property="og:image" content="http://hexgl.bkcore.com/image.png" />
+    <meta property="og:site_name" content="HexGL by BKcore" />
+    <meta property="fb:admins" content="1482017639" />
+    <link rel="icon" href="http://hexgl.bkcore.com/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="http://hexgl.bkcore.com/favicon.png" type="image/png">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/multi.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="css/fonts.css" type="text/css" charset="utf-8">
+    <style>
+      body {
+        padding:0;
+        margin:0;
+      }
+      canvas { pointer-events:none; width: 100%;}
+      #overlay{
+        position: absolute;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    </style>
+    <script type="text/javascript">
+    //analytics
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-26274524-4']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+  <script>
+(function(){try{var m=(window.location.search||'').match(/[?&]__lp=([^&]+)/);var n=m?decodeURIComponent(m[1]):'';if(window.parent&&window.parent!==window){window.parent.postMessage({__lumin:'frame-ok',game:'selenite/hexgl',nonce:n},'*');}}catch(e){}})();
+</script>
+<!-- Google tag (gtag.js) -->
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-L69H1VNZ27');
+</script>
+<script>
+  window.__lumin_game_id = 'selenite/hexgl';
+  console.log('[LuminSDK] Game loaded:', 'selenite/hexgl');
+</script>
+
+</head>
+
+  <body>
+    <div id="step-1">
+      <div id="global"></div>
+      <div id="title">
+      </div>
+      <div id="menucontainer">
+        <div id="menu">
+          <div id="start">Start</div>
+          <div id="s-controlType">Controls: Keyboard</div>
+          <div id="s-quality">Quality: High</div>
+          <div id="s-hud">HUD: On</div>
+          <div id="s-godmode" style="display: none">Godmode: Off</div>
+          <div id="s-credits">Credits</div>
+        </div>
+      </div>
+    </div>
+    <div id="step-2" style="display: none">
+      <div id="ctrl-help">Click/Touch to continue.</div>
+    </div>
+    <div id="step-3" style="display: none">
+      <div id="progressbar"></div>
+    </div>
+    <div id="step-4" style="display: none">
+      <div id="overlay"></div>
+      <div id="main"></div>
+    </div>
+    <div id="step-5" style="display: none">
+      <div id="time"></div>
+      <div id="ctrl-help">Click/Touch to continue.</div>
+    </div>
+    <div id="credits" style="display: none">
+      <h3>Code</h3>
+      <p><b>Concept and Development</b><br>Thibaut Despoulain (BKcore)</p>
+      <p><b>Contributors</b><br>townxelliot<br>mahesh.kk</p>
+      <p><b>Technologies</b><br>WebGL<br>JavaScript<br>CoffeeScript<br>Three.js<br>LeapMotion</p>
+      <h3>Graphics</h3>
+      <p><b>HexMKI base model</b><br>Charnel</p>
+      <p><b>Track texture</b><br>Nobiax</p>
+      <h4>Click anywhere to continue.</h4>
+    </div>
+
+    <div id="leapinfo" style="display: none"></div>
+
+    <script crossorigin="anonymous" src="libs/leap-0.4.1.min.js"></script>
+    <script crossorigin="anonymous" src="libs/Three.dev.js"></script>
+    <script crossorigin="anonymous" src="libs/ShaderExtras.js"></script>
+    <script crossorigin="anonymous" src="libs/postprocessing/EffectComposer.js"></script>
+    <script crossorigin="anonymous" src="libs/postprocessing/RenderPass.js"></script>
+    <script crossorigin="anonymous" src="libs/postprocessing/BloomPass.js"></script>
+    <script crossorigin="anonymous" src="libs/postprocessing/ShaderPass.js"></script>
+    <script crossorigin="anonymous" src="libs/postprocessing/MaskPass.js"></script>
+    <script crossorigin="anonymous" src="libs/Detector.js"></script>
+    <script crossorigin="anonymous" src="libs/Stats.js"></script>
+    <script crossorigin="anonymous" src="libs/DAT.GUI.min.js"></script>
+
+    <script crossorigin="anonymous" src="bkcore.coffee/controllers/TouchController.js"></script>
+    <script crossorigin="anonymous" src="bkcore.coffee/controllers/OrientationController.js"></script>
+    <script crossorigin="anonymous" src="bkcore.coffee/controllers/GamepadController.js"></script>
+
+    <script crossorigin="anonymous" src="bkcore.coffee/Timer.js"></script>
+    <script crossorigin="anonymous" src="bkcore.coffee/ImageData.js"></script>
+    <script crossorigin="anonymous" src="bkcore.coffee/Utils.js"></script>
+
+    <script crossorigin="anonymous" src="bkcore/threejs/RenderManager.js"></script>
+    <script crossorigin="anonymous" src="bkcore/threejs/Shaders.js"></script>
+    <script crossorigin="anonymous" src="bkcore/threejs/Particles.js"></script>
+    <script crossorigin="anonymous" src="bkcore/threejs/Loader.js"></script>
+
+    <script crossorigin="anonymous" src="bkcore/Audio.js"></script>
+
+    <script crossorigin="anonymous" src="bkcore/hexgl/HUD.js"></script>
+    <script crossorigin="anonymous" src="bkcore/hexgl/RaceData.js"></script>
+    <script crossorigin="anonymous" src="bkcore/hexgl/ShipControls.js"></script>
+    <script crossorigin="anonymous" src="bkcore/hexgl/ShipEffects.js"></script>
+    <script crossorigin="anonymous" src="bkcore/hexgl/CameraChase.js"></script>
+    <script crossorigin="anonymous" src="bkcore/hexgl/Gameplay.js"></script>
+
+    <script crossorigin="anonymous" src="bkcore/hexgl/tracks/Cityscape.js"></script>
+
+    <script crossorigin="anonymous" src="bkcore/hexgl/HexGL.js"></script>
+
+    <script crossorigin="anonymous" src="launch.js"></script>
+
+  </body>
+</html>
