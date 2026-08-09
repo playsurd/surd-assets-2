@@ -108,9 +108,19 @@
     } };
   }
 })();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
 if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};</script>
-<script>window.SURD_GAME={"id":"geometry-dash","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/geometry-dash/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/","files":{},"config":{}};</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/runtime.js"></script>
+<script>window.SURD_GAME={"id":"geometry-dash","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/geometry-dash/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/","files":{},"config":{}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/runtime.js"></script>
 
 	
     
@@ -134,22 +144,22 @@ if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this
     <meta name="twitter:image" content="https://web-dashers.github.io/assets/logo.png"/>
 	
 	<!-- Libraries and stuff -->
-	<script src="assets/scripts/game/allObjects.js?latest"></script>
-	<script src="assets/scripts/game/allLevels.js"></script>
-	<script src="assets/scripts/libs/phaser.min.js"></script>
-	<script src="assets/scripts/libs/pako.min.js"></script>
-	<script src="assets/scripts/utils/cache-manager.js"></script>
-	<script src="assets/scripts/api/GDapiWrapper.js"></script>
+	<script crossorigin="anonymous" src="assets/scripts/game/allObjects.js?latest"></script>
+	<script crossorigin="anonymous" src="assets/scripts/game/allLevels.js"></script>
+	<script crossorigin="anonymous" src="assets/scripts/libs/phaser.min.js"></script>
+	<script crossorigin="anonymous" src="assets/scripts/libs/pako.min.js"></script>
+	<script crossorigin="anonymous" src="assets/scripts/utils/cache-manager.js"></script>
+	<script crossorigin="anonymous" src="assets/scripts/api/GDapiWrapper.js"></script>
 	<!-- worker -->
 	<script>window._gdProxyUrl = "https://gd-proxy.gmdc.workers.dev";</script>
-	<script defer src="assets/scripts/utils/config.js"></script>
-	<script defer src="assets/scripts/core/triggers.js"></script>
-	<script defer src="assets/scripts/core/level.js?latest"></script>
-	<script defer src="assets/scripts/core/player.js"></script>
-	<script defer src="assets/scripts/core/audio.js"></script>
-	<script defer src="assets/scripts/core/loading-screen.js"></script>
-	<script defer src="assets/scripts/core/game-scene.js?latest"></script>
-	<script defer src="assets/scripts/core/main.js"></script>
+	<script crossorigin="anonymous" defer src="assets/scripts/utils/config.js"></script>
+	<script crossorigin="anonymous" defer src="assets/scripts/core/triggers.js"></script>
+	<script crossorigin="anonymous" defer src="assets/scripts/core/level.js?latest"></script>
+	<script crossorigin="anonymous" defer src="assets/scripts/core/player.js"></script>
+	<script crossorigin="anonymous" defer src="assets/scripts/core/audio.js"></script>
+	<script crossorigin="anonymous" defer src="assets/scripts/core/loading-screen.js"></script>
+	<script crossorigin="anonymous" defer src="assets/scripts/core/game-scene.js?latest"></script>
+	<script crossorigin="anonymous" defer src="assets/scripts/core/main.js"></script>
 	<script>
 		new ResizeObserver(() => {
 			window.dispatchEvent(new Event('resize'));
