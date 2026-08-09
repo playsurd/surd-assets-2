@@ -110,9 +110,19 @@
     } };
   }
 })();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
 if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};</script>
-<script>window.SURD_GAME={"id":"rainbow-obby","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/rainbow-obby/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/","files":{},"config":{}};</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/runtime.js"></script>
+<script>window.SURD_GAME={"id":"rainbow-obby","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/rainbow-obby/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/","files":{},"config":{}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/runtime.js"></script>
 
     
     <script>
@@ -145,10 +155,10 @@ if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this
     
     <title>Rainbow Obby v0.3x</title>
     
-    <script src="files/assets/152069093/1/GameAnalytics.js"></script>
-    <script src="playcanvas-stable.min.js"></script>
-    <script src="files/assets/171810889/1/colyseus.js"></script>
-    <script src="__settings__.js"></script>
+    <script crossorigin="anonymous" src="files/assets/152069093/1/GameAnalytics.js"></script>
+    <script crossorigin="anonymous" src="playcanvas-stable.min.js"></script>
+    <script crossorigin="anonymous" src="files/assets/171810889/1/colyseus.js"></script>
+    <script crossorigin="anonymous" src="__settings__.js"></script>
 <style>
 
 
@@ -164,9 +174,9 @@ if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this
 </head>
 
 <body>
-    <script src="__modules__.js"></script>
-    <script src="__start__.js"></script>
-    <script src="__loading__.js"></script>
+    <script crossorigin="anonymous" src="__modules__.js"></script>
+    <script crossorigin="anonymous" src="__start__.js"></script>
+    <script crossorigin="anonymous" src="__loading__.js"></script>
 </body>
 
 </html>
