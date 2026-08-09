@@ -105,6 +105,16 @@
     } };
   }
 })();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
 if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};</script></head><body>
 
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/angry-birds-chrome/fowl/fowl.nocache.js"></script>
@@ -221,6 +231,6 @@ if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this
                     }, 500);
       }
     </script>
-<script>window.SURD_GAME = {"id":"angry-birds-chrome","engine":"ruffle","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/angry-birds-chrome/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/","files":{"swf":{"path":"fowl/gwt-voices.swf","bytes":2234,"mime":"application/octet-stream"}},"config":{}};</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/runtime.js"></script>
+<script>window.SURD_GAME = {"id":"angry-birds-chrome","engine":"ruffle","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/angry-birds-chrome/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/","files":{"swf":{"path":"fowl/gwt-voices.swf","bytes":2234,"mime":"application/octet-stream"}},"config":{}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/runtime.js"></script>
 </body></html>
