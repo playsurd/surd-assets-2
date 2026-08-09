@@ -105,6 +105,16 @@
     } };
   }
 })();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
 if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};</script></head><body>
 
 
@@ -213,6 +223,6 @@ const engine = new Engine(GODOT_CONFIG);
 	}
 }());
 		</script><script>window.createUnityInstance=window.__surdBoot.cui;window.UnityLoader=window.__surdBoot.ul;window.Engine=window.__surdBoot.en;delete window.godotRunStart;</script>
-<script>window.SURD_GAME = {"id":"minesweeper-plus","engine":"godot","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/minesweeper-plus/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/","files":{"pck":{"path":"MinesweeperPlus.pck","parts":[".sp0",".sp1",".sp2"],"bytes":48031232,"mime":"application/octet-stream"},"wasm":{"path":"MinesweeperPlus.wasm","parts":[".sp0",".sp1",".sp2"],"bytes":52106500,"mime":"application/wasm"}},"config":{"indexJs":"MinesweeperPlus.js","godotConfig":{"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"MinesweeperPlus","experimentalVK":false,"fileSizes":{"MinesweeperPlus.pck":48031232,"MinesweeperPlus.wasm":52106500},"focusCanvas":true,"gdextensionLibs":[]}}};</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v4b8615f6da/runtime.js"></script>
+<script>window.SURD_GAME = {"id":"minesweeper-plus","engine":"godot","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/minesweeper-plus/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/","files":{"pck":{"path":"MinesweeperPlus.pck","parts":[".sp0",".sp1",".sp2"],"bytes":48031232,"mime":"application/octet-stream"},"wasm":{"path":"MinesweeperPlus.wasm","parts":[".sp0",".sp1",".sp2"],"bytes":52106500,"mime":"application/wasm"}},"config":{"indexJs":"MinesweeperPlus.js","godotConfig":{"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"MinesweeperPlus","experimentalVK":false,"fileSizes":{"MinesweeperPlus.pck":48031232,"MinesweeperPlus.wasm":52106500},"focusCanvas":true,"gdextensionLibs":[]}}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/runtime.js"></script>
 </body></html>
