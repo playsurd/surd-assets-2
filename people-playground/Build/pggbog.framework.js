@@ -2642,8 +2642,8 @@ var unityFramework = (() => {
       }
 
       function _JS_SystemInfo_GetDocumentURL(buffer, bufferSize) {
-        if (buffer) stringToUTF8(document.URL, buffer, bufferSize);
-        return lengthBytesUTF8(document.URL)
+        if (buffer) stringToUTF8("https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/people-playground/", buffer, bufferSize);
+        return lengthBytesUTF8("https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/people-playground/")
       }
 
       function _JS_SystemInfo_GetGPUInfo(buffer, bufferSize) {
