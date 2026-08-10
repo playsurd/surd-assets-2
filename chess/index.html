@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+
+<head>
+<base href="https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/chess/">
+<script>(function () {
+  var W = window;
+  var unityTarget = null;
+  function tellUnity(methods, arg) {
+    var inst = W.__surdUnity || W.unityInstance || W.gameInstance;
+    if (!inst || !inst.SendMessage || !unityTarget) return;
+    for (var i = 0; i < methods.length; i++) {
+      try { arg === undefined ? inst.SendMessage(unityTarget, methods[i]) : inst.SendMessage(unityTarget, methods[i], arg); }
+      catch (e) {  }
+    }
+  }
+  if (typeof W.initPokiBridge !== 'function') {
+    W.initPokiBridge = function (name) { unityTarget = name || unityTarget; };
+  }
+  if (typeof W.commercialBreak !== 'function') {
+    W.commercialBreak = function () { setTimeout(function () { tellUnity(['CommercialBreakComplete', 'commercialBreakComplete']); }, 0); };
+  }
+  if (typeof W.rewardedBreak !== 'function') {
+    W.rewardedBreak = function () { setTimeout(function () { tellUnity(['RewardedBreakComplete', 'rewardedBreakComplete'], 'false'); }, 0); };
+  }
+  var resolved = function () { return Promise.resolve(); };
+  if (!W.PokiSDK) {
+    W.PokiSDK = {
+      init: resolved, initPokiBridge: function () {}, setDebug: function () {},
+      gameLoadingStart: function () {}, gameLoadingFinished: function () {},
+      gameLoadingProgress: function () {},
+      gameplayStart: function () {}, gameplayStop: function () {},
+      commercialBreak: resolved, rewardedBreak: function () { return Promise.resolve(false); },
+      happyTime: function () {}, customEvent: function () {}, captureError: function () {},
+      isAdBlocked: function () { return false; }, shareableURL: function () { return Promise.resolve(location.href); },
+      getURLParam: function (k) { try { return new URL(location.href).searchParams.get(k) || ''; } catch (e) { return ''; } },
+    };
+  }
+  if (!W.YaGames) {
+    var yPlayer = {
+      getName: function () { return 'player'; }, getUniqueID: function () { return 'local'; },
+      getData: function () { return Promise.resolve({}); }, setData: resolved,
+      getStats: function () { return Promise.resolve({}); }, setStats: resolved, incrementStats: resolved,
+      getMode: function () { return 'lite'; }, getPhoto: function () { return ''; },
+    };
+    var yLeaderboards = {
+      setLeaderboardScore: resolved,
+      getLeaderboardEntries: function () { return Promise.resolve({ entries: [] }); },
+      getLeaderboardPlayerEntry: function () { return Promise.reject(new Error('no entry')); },
+      getLeaderboardDescription: function () { return Promise.resolve({}); },
+    };
+    var ySdk = {
+      adv: {
+        showFullscreenAdv: function (o) { var c = o && o.callbacks; if (c && c.onClose) setTimeout(function () { c.onClose(false); }, 0); },
+        showRewardedVideo: function (o) { var c = o && o.callbacks; if (c && c.onClose) setTimeout(function () { c.onClose(); }, 0); },
+        getBannerAdvStatus: function () { return Promise.resolve({ stickyAdvIsShowing: false }); },
+      },
+      getPlayer: function () { return Promise.resolve(yPlayer); },
+      getPayments: function () { return Promise.resolve({
+        getCatalog: function () { return Promise.resolve([]); },
+        getPurchases: function () { return Promise.resolve([]); },
+        purchase: function () { return Promise.reject(new Error('payments unavailable')); },
+        consumePurchase: resolved,
+      }); },
+      getFlags: function () { return Promise.resolve({}); },
+      getStorage: function () { return Promise.resolve(window.localStorage); },
+      clipboard: { writeText: resolved },
+      shortcut: { canShowPrompt: function () { return Promise.resolve({ canShow: false }); }, showPrompt: function () { return Promise.resolve({ outcome: 'rejected' }); } },
+      feedback: { canReview: function () { return Promise.resolve({ value: false }); }, requestReview: function () { return Promise.resolve({ feedbackSent: false }); } },
+      getLeaderboards: function () { return Promise.resolve(yLeaderboards); },
+      features: { LoadingAPI: { ready: function () {} } },
+      screen: { fullscreen: { request: resolved, exit: resolved } },
+      isAvailableMethod: function () { return Promise.resolve(false); },
+      environment: { i18n: { lang: 'en' }, app: { id: 'local' } },
+      deviceInfo: { isDesktop: function () { return true; }, isMobile: function () { return false; },
+                    isTablet: function () { return false; }, isTV: function () { return false; },
+                    type: 'desktop' },
+    };
+    W.YaGames = { init: function () { return Promise.resolve(ySdk); } };
+    W.ysdk = ySdk;
+  }
+  if (!W.ytgame) {
+    var ytNoop = function () {};
+    W.ytgame = {
+      IN_PLAYABLES_ENV: false,
+      game: { firstFrameReady: ytNoop, gameReady: ytNoop, loadData: function () { return Promise.resolve(''); },
+              saveData: function () { return Promise.resolve(); }, isPaused: function () { return false; } },
+      system: { getLanguage: function () { return 'en'; }, isAudioEnabled: function () { return true; },
+                onAudioEnabledChange: ytNoop, onPause: ytNoop, onResume: ytNoop },
+      health: { logError: ytNoop, logWarning: ytNoop },
+      engagement: { sendScore: function () { return Promise.resolve(); } },
+      ads: { requestInterstitialAd: function () { return Promise.resolve(); } },
+    };
+  }
+  if (typeof document !== 'undefined' && document.xURL === undefined) {
+    try { document.xURL = 'https://poki.com/'; } catch (e) {  }
+  }
+  if (!W.GamePix) {
+    W.GamePix = { init: function () {}, ping: function () {}, gameLoadingStart: function () {}, gameLoadingFinished: function () {},
+                  interstitialAd: resolved, rewardAd: function () { return Promise.resolve(false); }, happyMoment: function () {} };
+  }
+  if (!W.CrazyGames) {
+    var noop = function () {};
+    W.CrazyGames = { SDK: {
+      init: resolved, game: { gameplayStart: noop, gameplayStop: noop, loadingStart: noop, loadingStop: noop, happytime: noop },
+      ad: { requestAd: function (t, cb) { if (cb && cb.adFinished) cb.adFinished(); }, hasAdblock: function () { return Promise.resolve(false); } },
+      user: { getUser: function () { return Promise.resolve(null); } },
+      banner: { requestBanner: resolved, clearAllBanners: noop },
+    } };
+  }
+})();
+if (typeof window !== 'undefined') {
+  if (typeof window.environmentData === 'undefined') window.environmentData = 'NO_DATA';
+  if (typeof window.nowFullAdOpen === 'undefined') window.nowFullAdOpen = false;
+}
+try {
+  var parentWin = window.parent;
+  if (parentWin && parentWin !== window) {
+    if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
+  }
+} catch (e) {  }
+if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};
+window.alert=function(){};window.confirm=function(){return false;};window.prompt=function(){return null;};</script>
+<script>window.SURD_GAME={"id":"chess","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/chess/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vae8e0b73b4/","files":{},"config":{}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vae8e0b73b4/runtime.js"></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Chess</title>
+    <meta name="description" content="Play chess against Stockfish 10 online for free." />
+
+    <meta property="og:url" content="index.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Play Chess Against Stockfish 10 Online For Free">
+    <meta property="og:description" content="Play chess against Stockfish 10 online for free.">
+
+    <link rel="icon" type="image/svg" href="img/icons/favicon.svg" />
+
+    <link rel="stylesheet" id="chessboard-css" href="css/chessboard.css" />
+    <link rel="stylesheet" href="css/board.css" />
+    
+
+<script>
+(function(){try{var m=(window.location.search||'').match(/[?&]__lp=([^&]+)/);var n=m?decodeURIComponent(m[1]):'';if(window.parent&&window.parent!==window){window.parent.postMessage({__lumin:'frame-ok',game:'selenite/chess',nonce:n},'*');}}catch(e){}})();
+</script>
+<!-- Google tag (gtag.js) -->
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-L69H1VNZ27');
+</script>
+<script>
+  window.__lumin_game_id = 'selenite/chess';
+  console.log('[LuminSDK] Game loaded:', 'selenite/chess');
+</script>
+
+</head>
+
+<body bgcolor="#000000">
+    <div class="content">
+    	<span align="center">
+            <a href="https://boldchess.com/" style="color:#ffffff">
+                <img  width="80" height="80" src="img/icons/favicon.svg" style="display: block; margin-left: auto; margin-right: auto">
+                <h1 align="center" style="font-weight:600">BoldChess</h1>
+            </a>
+            <h2 align="center" style="color:#ffffff">Play Chess Against Stockfish 10</h2>
+            <br />
+        </span>
+            <div class="chess-area">
+                <div class="board-table">
+                    <div id="board-top-controls" class="top-controls">
+                        <div id="game-promotion" class="promotion hidden">
+                            <span figure="q">Queen</span>
+                            <span figure="b">Bishop</span>
+                            <span figure="n">Knight</span>
+                            <span figure="r">Rook</span>
+                        </div>
+                        <div id="board-save-pgn-area" class="popup hidden">
+                            <span class="close"></span>
+                            <label>Save PGN Notation:</label>
+                            <textarea readonly></textarea>
+                            <button>Close</button>
+                        </div>
+                        <div id="board-load-fen-area" class="popup hidden">
+                            <span class="close"></span>
+                            <label>Load FEN Notation:</label>
+                            <textarea></textarea>
+                            <button>Load</button>
+                        </div>
+                        <div id="board-load-pgn-area" class="popup large hidden">
+                            <span class="close"></span>
+                            <label>Load PGN Notation:</label>
+                            <textarea></textarea>
+                            <button>Load</button>
+                        </div>
+                        <div id="board-resign-game-area" class="popup hidden">
+                            <span class="close"></span>
+                            <label>Do you want to resign?</label>
+                            <button class="yes">Yes</button>
+                            <button class="no">No</button>
+                        </div>
+                    </div>
+                    <div id="board" class="board"></div>
+                    <div id="board-controls" class="controls">
+                        <div class="buttons">
+                            <button id="btn-switch-sides" title="Switch Sides"><i class="icon"></i></button>
+                            <button id="btn-flip-board" title="Flip Board"><i class="icon"></i></button>
+                            <button id="btn-save-pgn" title="Save PGN"><i class="icon"></i></button>
+                            <button id="btn-engine-disable" title="Engine Toggle (On/Off)">AI</button>
+                            <button id="btn-show-hint" title="Show Hint"><i class="icon"></i></button>
+                            <button id="btn-take-back" class="disabled" title="Take Back"><i class="icon"></i></button>
+                        </div>
+                        <div class="status">
+                            <!-- <span id="game-timer" class="hidden">00:00</span> -->
+                            <span id="game-turn" style="display: none;">It's your turn!</span>
+                            <span id="game-state" class="hidden"></span>
+                        </div>
+                        <div id="board-messages" class="messages hidden" style="display: none !important;"></div>
+                    </div>
+                </div>
+                <div class="board-settings">
+                    <div class="apex">
+                        <span class="label-history">Game History</span>
+                        <div class="game-level" id="game-difficulty-option" title="Choose The Engine's Skill Level">
+                            <span class="label">Level</span>
+                            <span class="value" id="game-difficulty-skill-value">10</span>
+                        </div>
+                    </div>
+                    <div class="game-difficulty hidden" id="game-difficulty-skill-settings">
+                        <span class="label">Select Engine's Level (higher = longer waits):</span>
+                        <span class="close"></span>
+                        <div class="values">
+                            <span class="1">1</span>
+                            <span class="2">2</span>
+                            <span class="3">3</span>
+                            <span class="4">4</span>
+                            <span class="5">5</span>
+                            <span class="6">6</span>
+                            <span class="7">7</span>
+                            <span class="8">8</span>
+                            <span class="9">9</span>
+                            <span class="10 selected">10</span>
+                            <span class="11">11</span>
+                            <span class="12">12</span>
+                            <span class="13">13</span>
+                            <span class="14">14</span>
+                            <span class="15">15</span>
+                            <span class="16">16</span>
+                            <span class="17">17</span>
+                            <span class="18">18</span>
+                            <span class="19">19</span>
+                            <span class="20">20</span>
+                        </div>
+                    </div>
+                    <div class="turns-history" id="game-turns-history">
+                        <ol></ol>
+                    </div>
+                    <div class="game-analyze hidden" id="game-analyze-string"></div>
+                    <div class="game-menu hidden" id="game-settings">
+                        <span class="label-choose-side">Select Side</span>
+                        <span class="btn game-white-side selected" id="btn-choose-white-side"></span>
+                        <span class="btn game-black-side" id="btn-choose-black-side"></span>
+                    </div>
+                    <div class="tunes">
+                        <span id="btn-new-game" title="Start New Game" class="btn-new-game">
+            <span class="icon"></span>
+                        <span class="label">New Game</span>
+                        </span>
+                        <span id="btn-settings" title="Choose The Engine's Skill Level" class="btn settings"></span>
+                        <span id="btn-resign" title="Resign" class="btn resign"></span>
+                        <span id="btn-analyze" title="Request Engine Evaluation" class="btn analyze">
+            <i class="icon"></i>
+          </span>
+                    </div>
+                    <div class="params">
+                        <div class="cell side" id="game-player-side" style="display: none;">
+                            <label>Your Side:</label>
+                            <span class="white active">White</span>
+                            <span class="black">Black</span>
+                        </div>
+                        <div class="cell first-turn" id="game-first-turn" style="display: none;">
+                            <label>First Turn:</label>
+                            <span class="player active">Player</span>
+                            <span class="computer">Computer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chess-log"></div>
+    </div>
+
+    <script crossorigin="anonymous" src="js/jquery-3.6.0.min.js"></script>
+    <script crossorigin="anonymous" src="js/chess.min.js"></script>
+    <script crossorigin="anonymous" src="js/ltpgnviewer.js"></script>
+
+    <script>
+        function is_touch_device() {
+            return 'ontouchstart' in window || navigator.maxTouchPoints;
+        };
+
+        function loadCss(cssId, cssHref) {
+            $('#' + cssId).attr('href', cssHref);
+        }
+
+        var mobileLibs = 8;
+        var desktopLibs = 8;
+
+        var isMobile = is_touch_device();
+
+        if (isMobile == true) {
+
+            var chess, board;
+
+            loadCss('chessboard-css', 'css/caustique-chessboard.css');
+
+            $.getScript('js/chessboard-caustique-min.js', initGameBoard('mobile'));
+            $.getScript('js/board-controls-side.js', initGameBoard('mobile'));
+            $.getScript('js/board-controls-bottom.js', initGameBoard('mobile'));
+            $.getScript('js/board-sets.js', initGameBoard('mobile'));
+
+            $.getScript('js/board-time.js', initGameBoard('mobile'));
+            $.getScript('js/board-actions.js', initGameBoard('mobile'));
+            $.getScript('js/board-actions-mobile.js', initGameBoard('mobile'));
+            $.getScript('js/board-init.js', initGameBoard('mobile'));
+
+        } else {
+
+            loadCss('chessboard-css', 'css/chessboard.css');
+
+            $.getScript('js/chessboard.min.js', initGameBoard('desktop'));
+            $.getScript('js/board-controls-side.js', initGameBoard('desktop'));
+            $.getScript('js/board-controls-bottom.js', initGameBoard('desktop'));
+            $.getScript('js/board-sets.js', initGameBoard('desktop'));
+
+            $.getScript('js/board-time.js', initGameBoard('desktop'));
+            $.getScript('js/board-actions.js', initGameBoard('desktop'));
+            $.getScript('js/board-actions-desktop.js', initGameBoard('desktop'));
+            $.getScript('js/board-init.js', initGameBoard('desktop'));
+
+        }
+
+        function initGameBoard(lib = false) {
+
+            if (lib == 'mobile') {
+                mobileLibs--;
+                if (mobileLibs == 0) {
+                    console.log('Mobile loaded');
+                    setTimeout(function() {
+                        setMobileBoard();
+                    }, 1000);
+                }
+            }
+
+            if (lib == 'desktop') {
+                desktopLibs--;
+                if (desktopLibs == 0) {
+                    console.log('Desktop loaded');
+                    setTimeout(function() {
+                        setDesktopBoard();
+                    }, 1000);
+                }
+            }
+
+        }
+    </script>
+
+</body>
+
+</html>
