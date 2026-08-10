@@ -115,10 +115,11 @@ try {
     if (typeof parentWin.maeExportApis_ !== 'function') parentWin.maeExportApis_ = function () {};
   }
 } catch (e) {  }
-if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};</script></head><body>
+if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this.SetMessage=function(){};this.SetProgress=function(){};this.Clear=function(){};};
+window.alert=function(){};window.confirm=function(){return false;};window.prompt=function(){return null;};</script></head><body>
 <div id="unity-container" class="unity-desktop" style="position:absolute;inset:0"><canvas id="unity-canvas" style="width:100vw;height:100vh;display:block"></canvas><div id="loading-cover" style="display:none"></div><div id="unity-loading-bar" style="display:none"><div id="unity-logo"></div><div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div></div><div id="unity-footer"><div id="unity-webgl-logo"></div><div id="unity-fullscreen-button"></div><div id="unity-build-title"></div></div></div>
 
-<script>window.__surdBoot={cui:window.createUnityInstance,ul:window.UnityLoader,en:window.Engine};window.createUnityInstance=function(){return new Promise(function(){})};window.UnityLoader={instantiate:function(){}};window.Engine=function(){};window.Engine.getMissingFeatures=function(){return[]};window.Engine.isWebGLAvailable=function(){return true};window.Engine.load=function(){return Promise.resolve()};window.godotRunStart=function(){};window.main=function(){};</script><script>
+<script>window.__surdBoot={cui:window.createUnityInstance,ul:window.UnityLoader,en:window.Engine,rp:window.RufflePlayer};window.createUnityInstance=function(){return new Promise(function(){})};window.UnityLoader={instantiate:function(){}};window.Engine=function(){};window.Engine.getMissingFeatures=function(){return[]};window.Engine.isWebGLAvailable=function(){return true};window.Engine.load=function(){return Promise.resolve()};window.RufflePlayer={newest:function(){return{createPlayer:function(){var d=document.createElement("div");d.load=function(){};return d;}};}};window.godotRunStart=function(){};window.main=function(){};</script><script>
     var canvas = document.querySelector("#unity-canvas");
 
     // Shows a temporary message banner/ribbon for a few seconds, or
@@ -223,7 +224,7 @@ if(typeof window.UnityProgress!=="function")window.UnityProgress=function(){this
     };
 
     document.body.appendChild(script);
-  </script><script>window.createUnityInstance=window.__surdBoot.cui;window.UnityLoader=window.__surdBoot.ul;window.Engine=window.__surdBoot.en;delete window.godotRunStart;</script>
-<script>window.SURD_GAME = {"id":"dimension-incident","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/dimension-incident/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/","files":{"data":{"path":"Build/Web.data.br","parts":[".sp0",".sp1",".sp2"],"bytes":48910120,"mime":"application/octet-stream"},"framework":{"path":"Build/Web.framework.js","bytes":446446,"mime":"text/javascript"},"code":{"path":"Build/Web.wasm.br","parts":[".sp0",".sp1",".sp2"],"bytes":47981671,"mime":"application/wasm"}},"config":{"era":"modern","loaderJs":"Build/Web.loader.js","companyName":"BiznesBear","productName":"Dimension incident","productVersion":"Release 1.2"}};</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vd90635141c/runtime.js"></script>
+  </script><script>window.createUnityInstance=window.__surdBoot.cui;window.UnityLoader=window.__surdBoot.ul;window.Engine=window.__surdBoot.en;window.RufflePlayer=window.__surdBoot.rp;delete window.godotRunStart;</script>
+<script>window.SURD_GAME = {"id":"dimension-incident","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/dimension-incident/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vae8e0b73b4/","files":{"data":{"path":"Build/Web.data.br","parts":[".sp0",".sp1",".sp2"],"bytes":48910120,"mime":"application/octet-stream"},"framework":{"path":"Build/Web.framework.js","bytes":446446,"mime":"text/javascript"},"code":{"path":"Build/Web.wasm.br","parts":[".sp0",".sp1",".sp2"],"bytes":47981671,"mime":"application/wasm"}},"config":{"era":"modern","loaderJs":"Build/Web.loader.js","companyName":"BiznesBear","productName":"Dimension incident","productVersion":"Release 1.2"}};</script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/vae8e0b73b4/runtime.js"></script>
 </body></html>
