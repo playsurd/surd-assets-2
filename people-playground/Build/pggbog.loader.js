@@ -56,7 +56,7 @@ function createUnityInstance(r, n, l) {
     disabledCanvasEvents: ["contextmenu", "dragstart"]
   };
   for (o in e(n, "companyName", "Unity"), e(n, "productName", "WebGL Player"), e(n, "productVersion", "1.0"), n) c[o] = n[o];
-  c.streamingAssetsUrl = new URL(c.streamingAssetsUrl, document.URL).href;
+  c.streamingAssetsUrl = new URL(c.streamingAssetsUrl, "https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/people-playground/").href;
   var a = c.disabledCanvasEvents.slice();
 
   function i(e) {
