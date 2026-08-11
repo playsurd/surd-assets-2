@@ -157,9 +157,24 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
      * (that order is load-bearing — moving SURD_GAME ahead of the prelude once stopped this
      * very game from rendering at all), so at install time there is no base to capture. */
     function gbase(){ try { return (window.SURD_GAME && window.SURD_GAME.base) || ''; } catch(e){ return ''; } }
+    /* A file we downloaded from a third-party host and now ship ourselves. Checked before
+     * anything else: this is what stops a game depending on someone else's server staying up,
+     * and it works even when the game builds the URL at runtime. */
+    function vendored(u){
+      try {
+        var M = window.SURD_GAME, map = M && M.ext;
+        if (!map || typeof u !== 'string') return null;
+        var q = u.split('#')[0];
+        if (map[q]) return String(M.base).replace(/\/?$/, '/') + map[q];
+        var noq = q.split('?')[0];
+        if (map[noq]) return String(M.base).replace(/\/?$/, '/') + map[noq];
+        return null;
+      } catch(e){ return null; }
+    }
     function rebase(u){
       try {
         if (typeof u !== 'string' || !u) return u;
+        var v = vendored(u); if (v) return v;
         var B = gbase(); if (!B) return u;
         B = B.replace(/\/?$/, '/');
         if (u.indexOf(B) === 0) return u;                        // already where it belongs
@@ -170,7 +185,13 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
         try { RT = (window.SURD_GAME && window.SURD_GAME.runtime) || ''; } catch(e){}
         if (RT && u.indexOf(RT) === 0) return u;
         if (u.indexOf('/_rt/') >= 0 || u.indexOf('surd-runtime') >= 0) return u;
-        if (u.charAt(0) === '/' && u.charAt(1) !== '/') return B + u.slice(1);
+        /* A bare "/" (or "/?x") has NO path to rebase, and rewriting it produced a request for
+         * the base DIRECTORY, which 404s and shows up in the log as
+         * "failed to load .../suika-game/". Leave those alone. */
+        if (u.charAt(0) === '/' && u.charAt(1) !== '/') {
+          var rest = u.slice(1);
+          return rest && rest.charAt(0) !== '?' && rest.charAt(0) !== '#' ? B + rest : u;
+        }
         /* An engine that builds its own absolute URLs from location, rather than letting the
          * browser resolve a relative path, lands on the SITE origin — which holds no game
          * assets either. 2048-merge-run (LayaAir) asks for "<origin>/version.json" outright,
@@ -184,7 +205,11 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
     var of = window.fetch;
     if (of) window.fetch = function(i, o){
       var u = (i && i.url) ? i.url : i;
-      if (bad(u)) return Promise.resolve(new Response('', {status:204}));
+      /* 204 forbids a body, and passing one throws in Firefox ("Response body is given with a
+       * null body status") — INSIDE the game's own fetch call, which is exactly what this branch
+       * exists to protect (papa-burgeria). Status 200 with an empty body is accepted everywhere
+       * and reads to the caller as "nothing here", which is what we want to say. */
+      if (bad(u)) return Promise.resolve(new Response('', {status:200}));
       if (typeof i === 'string') { var r = rebase(i); if (r !== i) return of.call(this, r, o); }
       return of.apply(this, arguments);
     };
@@ -222,12 +247,39 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
         var d = Object.getOwnPropertyDescriptor(P, 'src'); if (!d || !d.set) return;
         Object.defineProperty(P, 'src', {
           configurable: true, enumerable: d.enumerable, get: d.get,
-          set: function(v){ if (bad(v)) return; return d.set.call(this, typeof v === 'string' ? rebase(v) : v); }
+          set: function(v){
+            if (bad(v)) return;
+            var t = typeof v === 'string' ? rebase(v) : v;
+            /* CORS ON OUR OWN ASSETS — not politeness, a hard requirement.
+             *
+             * WebGL refuses to upload a texture from an image fetched cross-origin without
+             * CORS: the canvas would be tainted, so it throws "SecurityError: The operation is
+             * insecure" inside uploadTexture and the game shows a grey screen with everything
+             * apparently loaded (stair-race-3d, PlayCanvas). Our assets live on another origin
+             * by definition — the page is a blob, the files are on the CDN — so every engine
+             * that loads textures through <img> hits this.
+             *
+             * Scoped to OUR hosts and to relative URLs (which resolve against our base through
+             * <base>): jsDelivr and raw both send Access-Control-Allow-Origin: *, so requesting
+             * CORS always succeeds there. Setting it on a third-party host that does NOT send
+             * the header would turn a working image into a failed one, so those are left alone.
+             *
+             * Scripts get the same treatment for a different reason: without crossorigin an
+             * error inside an engine-injected script arrives as the bare, useless
+             * "Script error." with no file or line (2048-merge-run's laya.core.min.js). */
+            try {
+              var ours = typeof t === 'string' && (!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(t)
+                || t.indexOf(gbase()) === 0
+                || /^https:\/\/(cdn\.jsdelivr\.net|raw\.githubusercontent\.com)\//.test(t));
+              if (ours && !this.crossOrigin) this.crossOrigin = 'anonymous';
+            } catch(e){}
+            return d.set.call(this, t);
+          }
         });
       });
     } catch(e){}
   })();</script>
-<script>window.SURD_GAME={"id":"friday-night-funkin-rev-mixed","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/friday-night-funkin-rev-mixed/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v3ac116b9a9/","files":{},"config":{},"split":[{"p":"assets/songs/rejected/Inst.ogg","u":["assets/songs/rejected/Inst.ogg"],"b":2241571,"m":"audio/ogg","pf":1},{"p":"assets/songs/rejected/Voices.ogg","u":["assets/songs/rejected/Voices.ogg"],"b":2130049,"m":"audio/ogg","pf":1},{"p":"assets/songs/final-destination-god/Voices.ogg","u":["assets/songs/final-destination-god/Voices.ogg"],"b":1724543,"m":"audio/ogg","pf":1},{"p":"assets/songs/final-destination-god/Inst.ogg","u":["assets/songs/final-destination-god/Inst.ogg"],"b":1695921,"m":"audio/ogg","pf":1},{"p":"assets/songs/ballin/Inst.ogg","u":["assets/songs/ballin/Inst.ogg"],"b":1649594,"m":"audio/ogg","pf":1},{"p":"assets/songs/tread-lightly/Inst.ogg","u":["assets/songs/tread-lightly/Inst.ogg"],"b":1601440,"m":"audio/ogg","pf":1},{"p":"assets/songs/boxing-paradise/Inst.ogg","u":["assets/songs/boxing-paradise/Inst.ogg"],"b":1574101,"m":"audio/ogg","pf":1},{"p":"assets/songs/final-destination/Voices.ogg","u":["assets/songs/final-destination/Voices.ogg"],"b":1559790,"m":"audio/ogg","pf":1},{"p":"assets/songs/final-destination/Inst.ogg","u":["assets/songs/final-destination/Inst.ogg"],"b":1540158,"m":"audio/ogg","pf":1},{"p":"assets/songs/revenge/Inst.ogg","u":["assets/songs/revenge/Inst.ogg"],"b":1454672,"m":"audio/ogg","pf":1},{"p":"assets/songs/tread-lightly/Voices.ogg","u":["assets/songs/tread-lightly/Voices.ogg"],"b":1418052,"m":"audio/ogg","pf":1},{"p":"assets/songs/bounce/Inst.ogg","u":["assets/songs/bounce/Inst.ogg"],"b":1410916,"m":"audio/ogg","pf":1},{"p":"assets/songs/sporting/Inst.ogg","u":["assets/songs/sporting/Inst.ogg"],"b":1398756,"m":"audio/ogg","pf":1},{"p":"assets/songs/revenge/Voices.ogg","u":["assets/songs/revenge/Voices.ogg"],"b":1383016,"m":"audio/ogg","pf":1},{"p":"assets/songs/purgatory/Inst.ogg","u":["assets/songs/purgatory/Inst.ogg"],"b":1380671,"m":"audio/ogg","pf":1},{"p":"assets/songs/sporting/Voices.ogg","u":["assets/songs/sporting/Voices.ogg"],"b":1379687,"m":"audio/ogg","pf":1},{"p":"assets/songs/purgatory/Voices.ogg","u":["assets/songs/purgatory/Voices.ogg"],"b":1371725,"m":"audio/ogg","pf":1},{"p":"assets/songs/knockout/Inst.ogg","u":["assets/songs/knockout/Inst.ogg"],"b":1345884,"m":"audio/ogg","pf":1},{"p":"assets/songs/knockout/Voices.ogg","u":["assets/songs/knockout/Voices.ogg"],"b":1320904,"m":"audio/ogg","pf":1},{"p":"assets/songs/disadvantage/Inst.ogg","u":["assets/songs/disadvantage/Inst.ogg"],"b":1304931,"m":"audio/ogg","pf":1},{"p":"assets/songs/ballin/Voices.ogg","u":["assets/songs/ballin/Voices.ogg"],"b":1304841,"m":"audio/ogg","pf":1},{"p":"assets/songs/king-hit/Inst.ogg","u":["assets/songs/king-hit/Inst.ogg"],"b":1295208,"m":"audio/ogg","pf":1},{"p":"assets/songs/boxing-paradise/Voices.ogg","u":["assets/songs/boxing-paradise/Voices.ogg"],"b":1289871,"m":"audio/ogg","pf":1},{"p":"assets/songs/ruckus/Inst.ogg","u":["assets/songs/ruckus/Inst.ogg"],"b":1186565,"m":"audio/ogg","pf":1},{"p":"assets/songs/fight-it-up/Inst.ogg","u":["assets/songs/fight-it-up/Inst.ogg"],"b":1175095,"m":"audio/ogg","pf":1},{"p":"assets/songs/disadvantage/Voices.ogg","u":["assets/songs/disadvantage/Voices.ogg"],"b":1153369,"m":"audio/ogg","pf":1},{"p":"assets/songs/king-hit/Voices.ogg","u":["assets/songs/king-hit/Voices.ogg"],"b":1132723,"m":"audio/ogg","pf":1},{"p":"assets/songs/ruckus/Voices.ogg","u":["assets/songs/ruckus/Voices.ogg"],"b":1100188,"m":"audio/ogg","pf":1},{"p":"assets/songs/light-it-up/Inst.ogg","u":["assets/songs/light-it-up/Inst.ogg"],"b":1099316,"m":"audio/ogg","pf":1},{"p":"assets/songs/fisticuffs/Inst.ogg","u":["assets/songs/fisticuffs/Inst.ogg"],"b":1092916,"m":"audio/ogg","pf":1},{"p":"assets/songs/light-it-up/Voices.ogg","u":["assets/songs/light-it-up/Voices.ogg"],"b":1083681,"m":"audio/ogg","pf":1},{"p":"assets/songs/power-link/Inst.ogg","u":["assets/songs/power-link/Inst.ogg"],"b":1083447,"m":"audio/ogg","pf":1},{"p":"assets/songs/bounce/Voices.ogg","u":["assets/songs/bounce/Voices.ogg"],"b":1078762,"m":"audio/ogg","pf":1},{"p":"assets/songs/fisticuffs/Voices.ogg","u":["assets/songs/fisticuffs/Voices.ogg"],"b":1076555,"m":"audio/ogg","pf":1},{"p":"assets/images/GHOST_BF.png","u":["assets/images/GHOST_BF.png"],"b":1041818,"m":"image/png","pf":1},{"p":"assets/shared/music/breakfast.ogg","u":["assets/shared/music/breakfast.ogg"],"b":1017721,"m":"audio/ogg","pf":1},{"p":"assets/songs/power-link/Voices.ogg","u":["assets/songs/power-link/Voices.ogg"],"b":996551,"m":"audio/ogg","pf":1},{"p":"assets/images/gf_revmix-wiik2.png","u":["assets/images/gf_revmix-wiik2.png"],"b":894292,"m":"image/png","pf":1},{"p":"assets/shared/images/characters/gf_revmix-wiik2.png","u":["assets/shared/images/characters/gf_revmix-wiik2.png"],"b":894292,"m":"image/png","pf":1},{"p":"assets/music/freakyMenu.ogg","u":["assets/music/freakyMenu.ogg"],"b":700678,"m":"audio/ogg","pf":1},{"p":"assets/songs/night-of-nights/Inst.ogg","u":["assets/songs/night-of-nights/Inst.ogg"],"b":642062,"m":"audio/ogg","pf":1},{"p":"assets/music/offsetSong.ogg","u":["assets/music/offsetSong.ogg"],"b":618924,"m":"audio/ogg","pf":1},{"p":"assets/images/final-background.png","u":["assets/images/final-background.png"],"b":596549,"m":"image/png","pf":1}]};</script>
+<script>window.SURD_GAME={"id":"friday-night-funkin-rev-mixed","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/friday-night-funkin-rev-mixed/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v339e1c6514/","files":{},"config":{},"split":[{"p":"assets/songs/rejected/Inst.ogg","u":["assets/songs/rejected/Inst.ogg"],"b":2241571,"m":"audio/ogg","pf":1},{"p":"assets/songs/rejected/Voices.ogg","u":["assets/songs/rejected/Voices.ogg"],"b":2130049,"m":"audio/ogg","pf":1},{"p":"assets/songs/final-destination-god/Voices.ogg","u":["assets/songs/final-destination-god/Voices.ogg"],"b":1724543,"m":"audio/ogg","pf":1},{"p":"assets/songs/final-destination-god/Inst.ogg","u":["assets/songs/final-destination-god/Inst.ogg"],"b":1695921,"m":"audio/ogg","pf":1},{"p":"assets/songs/ballin/Inst.ogg","u":["assets/songs/ballin/Inst.ogg"],"b":1649594,"m":"audio/ogg","pf":1},{"p":"assets/songs/tread-lightly/Inst.ogg","u":["assets/songs/tread-lightly/Inst.ogg"],"b":1601440,"m":"audio/ogg","pf":1},{"p":"assets/songs/boxing-paradise/Inst.ogg","u":["assets/songs/boxing-paradise/Inst.ogg"],"b":1574101,"m":"audio/ogg","pf":1},{"p":"assets/songs/final-destination/Voices.ogg","u":["assets/songs/final-destination/Voices.ogg"],"b":1559790,"m":"audio/ogg","pf":1},{"p":"assets/songs/final-destination/Inst.ogg","u":["assets/songs/final-destination/Inst.ogg"],"b":1540158,"m":"audio/ogg","pf":1},{"p":"assets/songs/revenge/Inst.ogg","u":["assets/songs/revenge/Inst.ogg"],"b":1454672,"m":"audio/ogg","pf":1},{"p":"assets/songs/tread-lightly/Voices.ogg","u":["assets/songs/tread-lightly/Voices.ogg"],"b":1418052,"m":"audio/ogg","pf":1},{"p":"assets/songs/bounce/Inst.ogg","u":["assets/songs/bounce/Inst.ogg"],"b":1410916,"m":"audio/ogg","pf":1},{"p":"assets/songs/sporting/Inst.ogg","u":["assets/songs/sporting/Inst.ogg"],"b":1398756,"m":"audio/ogg","pf":1},{"p":"assets/songs/revenge/Voices.ogg","u":["assets/songs/revenge/Voices.ogg"],"b":1383016,"m":"audio/ogg","pf":1},{"p":"assets/songs/purgatory/Inst.ogg","u":["assets/songs/purgatory/Inst.ogg"],"b":1380671,"m":"audio/ogg","pf":1},{"p":"assets/songs/sporting/Voices.ogg","u":["assets/songs/sporting/Voices.ogg"],"b":1379687,"m":"audio/ogg","pf":1},{"p":"assets/songs/purgatory/Voices.ogg","u":["assets/songs/purgatory/Voices.ogg"],"b":1371725,"m":"audio/ogg","pf":1},{"p":"assets/songs/knockout/Inst.ogg","u":["assets/songs/knockout/Inst.ogg"],"b":1345884,"m":"audio/ogg","pf":1},{"p":"assets/songs/knockout/Voices.ogg","u":["assets/songs/knockout/Voices.ogg"],"b":1320904,"m":"audio/ogg","pf":1},{"p":"assets/songs/disadvantage/Inst.ogg","u":["assets/songs/disadvantage/Inst.ogg"],"b":1304931,"m":"audio/ogg","pf":1},{"p":"assets/songs/ballin/Voices.ogg","u":["assets/songs/ballin/Voices.ogg"],"b":1304841,"m":"audio/ogg","pf":1},{"p":"assets/songs/king-hit/Inst.ogg","u":["assets/songs/king-hit/Inst.ogg"],"b":1295208,"m":"audio/ogg","pf":1},{"p":"assets/songs/boxing-paradise/Voices.ogg","u":["assets/songs/boxing-paradise/Voices.ogg"],"b":1289871,"m":"audio/ogg","pf":1},{"p":"assets/songs/ruckus/Inst.ogg","u":["assets/songs/ruckus/Inst.ogg"],"b":1186565,"m":"audio/ogg","pf":1},{"p":"assets/songs/fight-it-up/Inst.ogg","u":["assets/songs/fight-it-up/Inst.ogg"],"b":1175095,"m":"audio/ogg","pf":1},{"p":"assets/songs/disadvantage/Voices.ogg","u":["assets/songs/disadvantage/Voices.ogg"],"b":1153369,"m":"audio/ogg","pf":1},{"p":"assets/songs/king-hit/Voices.ogg","u":["assets/songs/king-hit/Voices.ogg"],"b":1132723,"m":"audio/ogg","pf":1},{"p":"assets/songs/ruckus/Voices.ogg","u":["assets/songs/ruckus/Voices.ogg"],"b":1100188,"m":"audio/ogg","pf":1},{"p":"assets/songs/light-it-up/Inst.ogg","u":["assets/songs/light-it-up/Inst.ogg"],"b":1099316,"m":"audio/ogg","pf":1},{"p":"assets/songs/fisticuffs/Inst.ogg","u":["assets/songs/fisticuffs/Inst.ogg"],"b":1092916,"m":"audio/ogg","pf":1},{"p":"assets/songs/light-it-up/Voices.ogg","u":["assets/songs/light-it-up/Voices.ogg"],"b":1083681,"m":"audio/ogg","pf":1},{"p":"assets/songs/power-link/Inst.ogg","u":["assets/songs/power-link/Inst.ogg"],"b":1083447,"m":"audio/ogg","pf":1},{"p":"assets/songs/bounce/Voices.ogg","u":["assets/songs/bounce/Voices.ogg"],"b":1078762,"m":"audio/ogg","pf":1},{"p":"assets/songs/fisticuffs/Voices.ogg","u":["assets/songs/fisticuffs/Voices.ogg"],"b":1076555,"m":"audio/ogg","pf":1},{"p":"assets/images/GHOST_BF.png","u":["assets/images/GHOST_BF.png"],"b":1041818,"m":"image/png","pf":1},{"p":"assets/shared/music/breakfast.ogg","u":["assets/shared/music/breakfast.ogg"],"b":1017721,"m":"audio/ogg","pf":1},{"p":"assets/songs/power-link/Voices.ogg","u":["assets/songs/power-link/Voices.ogg"],"b":996551,"m":"audio/ogg","pf":1},{"p":"assets/images/gf_revmix-wiik2.png","u":["assets/images/gf_revmix-wiik2.png"],"b":894292,"m":"image/png","pf":1},{"p":"assets/shared/images/characters/gf_revmix-wiik2.png","u":["assets/shared/images/characters/gf_revmix-wiik2.png"],"b":894292,"m":"image/png","pf":1},{"p":"assets/music/freakyMenu.ogg","u":["assets/music/freakyMenu.ogg"],"b":700678,"m":"audio/ogg","pf":1},{"p":"assets/songs/night-of-nights/Inst.ogg","u":["assets/songs/night-of-nights/Inst.ogg"],"b":642062,"m":"audio/ogg","pf":1},{"p":"assets/music/offsetSong.ogg","u":["assets/music/offsetSong.ogg"],"b":618924,"m":"audio/ogg","pf":1},{"p":"assets/images/final-background.png","u":["assets/images/final-background.png"],"b":596549,"m":"image/png","pf":1}]};</script>
 <script>(function () {
   var M = window.SURD_GAME;
   var table = M && M.split;
@@ -393,7 +445,7 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
     var st = { total: pf.length, done: 0, bytes: 0, doneBytes: 0, failed: 0 };
     for (i = 0; i < pf.length; i++) st.bytes += pf[i].b || 0;
     window.SURD_PREFETCH = st;
-    var next = 0, LANES = 3;
+    var next = 0, LANES = 2;
     var pump = function () {
       if (next >= pf.length) return;
       var e = pf[next++];
@@ -403,7 +455,7 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
     for (i = 0; i < LANES && i < pf.length; i++) pump();
   }
 })();</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v3ac116b9a9/runtime.js"></script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v339e1c6514/runtime.js"></script>
 <script>window.addEventListener("keydown",function(e){if([32,37,38,39,40].indexOf(e.keyCode)>-1){e.preventDefault();}},false);</script>
 	
 	<meta charset="utf-8">
