@@ -281,7 +281,7 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
       });
     } catch(e){}
   })();</script>
-<script>window.SURD_GAME={"id":"command-conquer","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/command-conquer/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v339e1c6514/","files":{},"config":{},"ext":{"https://code.jquery.com/jquery-2.1.1.min.js":"_ext/code.jquery.com/jquery-2.1.1.min.js"},"split":[{"p":"softs/command_and_conquer.zip","u":["softs/command_and_conquer.zip"],"b":17453128,"m":"application/octet-stream","pf":1},{"p":"softs/blood.zip","u":["softs/blood.zip"],"b":14568219,"m":"application/octet-stream","pf":1},{"p":"softs/hacx.zip","u":["softs/hacx.zip"],"b":11795440,"m":"application/octet-stream","pf":1},{"p":"softs/zdoom_.zip","u":["softs/zdoom_.zip"],"b":9945227,"m":"application/octet-stream","pf":1},{"p":"softs/doom2.zip","u":["softs/doom2.zip"],"b":6781542,"m":"application/octet-stream","pf":1},{"p":"softs/heretic.zip","u":["softs/heretic.zip"],"b":2794870,"m":"application/octet-stream","pf":1},{"p":"softs/doom2d.zip","u":["softs/doom2d.zip"],"b":2660973,"m":"application/octet-stream","pf":1}]};</script>
+<script>window.SURD_GAME={"id":"command-conquer","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/command-conquer/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v8caca1eedf/","files":{},"config":{},"ext":{"https://code.jquery.com/jquery-2.1.1.min.js":"_ext/code.jquery.com/jquery-2.1.1.min.js"},"split":[{"p":"softs/command_and_conquer.zip","u":["softs/command_and_conquer.zip"],"b":17453128,"m":"application/octet-stream","pf":1},{"p":"softs/blood.zip","u":["softs/blood.zip"],"b":14568219,"m":"application/octet-stream","pf":1},{"p":"softs/hacx.zip","u":["softs/hacx.zip"],"b":11795440,"m":"application/octet-stream","pf":1},{"p":"softs/zdoom_.zip","u":["softs/zdoom_.zip"],"b":9945227,"m":"application/octet-stream","pf":1},{"p":"softs/doom2.zip","u":["softs/doom2.zip"],"b":6781542,"m":"application/octet-stream","pf":1},{"p":"softs/heretic.zip","u":["softs/heretic.zip"],"b":2794870,"m":"application/octet-stream","pf":1},{"p":"softs/doom2d.zip","u":["softs/doom2d.zip"],"b":2660973,"m":"application/octet-stream","pf":1}]};</script>
 <script>(function () {
   var M = window.SURD_GAME;
   var table = M && M.split;
@@ -306,6 +306,10 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
     var q = url.split('#')[0].split('?')[0];
     try { q = decodeURIComponent(q); } catch (e) {}
     q = q.replace(/^\.\//, '');
+    try {
+      var ext = M && M.ext;
+      if (ext && ext[q]) q = ext[q];
+    } catch (e) {}
     var hit = exact(q);
     return hit || virtualPart(q);
   }
@@ -457,7 +461,7 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
     for (i = 0; i < LANES && i < pf.length; i++) pump();
   }
 })();</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v339e1c6514/runtime.js"></script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v8caca1eedf/runtime.js"></script>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title></title>
