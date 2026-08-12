@@ -279,7 +279,7 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
       });
     } catch(e){}
   })();</script>
-<script>window.SURD_GAME={"id":"s-p-l-i-t","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/s-p-l-i-t/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v339e1c6514/","files":{},"config":{},"split":[{"p":"split.pck.part00","u":["split.pck.part00.sp0","split.pck.part00.sp1","split.pck.part00.sp2"],"b":52428800,"m":"application/octet-stream","v":1,"pf":1},{"p":"split.pck.part01","u":["split.pck.part01.sp0","split.pck.part01.sp1","split.pck.part01.sp2"],"b":52428800,"m":"application/octet-stream","v":1,"pf":1},{"p":"split.pck.part02","u":["split.pck.part02.sp0","split.pck.part02.sp1","split.pck.part02.sp2"],"b":52428800,"m":"application/octet-stream","v":1,"pf":1},{"p":"split.pck.part03","u":["split.pck.part03.sp0","split.pck.part03.sp1","split.pck.part03.sp2"],"b":52428800,"m":"application/octet-stream","v":1,"pf":1},{"p":"split.pck.part04","u":["split.pck.part04.sp0","split.pck.part04.sp1","split.pck.part04.sp2"],"b":52428800,"m":"application/octet-stream","v":1},{"p":"split.pck.part05","u":["split.pck.part05.sp0","split.pck.part05.sp1","split.pck.part05.sp2"],"b":52428800,"m":"application/octet-stream","v":1},{"p":"split.pck.part06","u":["split.pck.part06.sp0","split.pck.part06.sp1"],"b":23787616,"m":"application/octet-stream","v":1},{"p":"split.wasm","u":["split.wasm.sp0","split.wasm.sp1"],"b":35739700,"m":"application/wasm","v":1}]};</script>
+<script>window.SURD_GAME={"id":"s-p-l-i-t","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/s-p-l-i-t/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v8caca1eedf/","files":{},"config":{},"split":[{"p":"split.pck.part00","u":["split.pck.part00.sp0","split.pck.part00.sp1","split.pck.part00.sp2"],"b":52428800,"m":"application/octet-stream","v":1,"pf":1},{"p":"split.pck.part01","u":["split.pck.part01.sp0","split.pck.part01.sp1","split.pck.part01.sp2"],"b":52428800,"m":"application/octet-stream","v":1,"pf":1},{"p":"split.pck.part02","u":["split.pck.part02.sp0","split.pck.part02.sp1","split.pck.part02.sp2"],"b":52428800,"m":"application/octet-stream","v":1,"pf":1},{"p":"split.pck.part03","u":["split.pck.part03.sp0","split.pck.part03.sp1","split.pck.part03.sp2"],"b":52428800,"m":"application/octet-stream","v":1,"pf":1},{"p":"split.pck.part04","u":["split.pck.part04.sp0","split.pck.part04.sp1","split.pck.part04.sp2"],"b":52428800,"m":"application/octet-stream","v":1},{"p":"split.pck.part05","u":["split.pck.part05.sp0","split.pck.part05.sp1","split.pck.part05.sp2"],"b":52428800,"m":"application/octet-stream","v":1},{"p":"split.pck.part06","u":["split.pck.part06.sp0","split.pck.part06.sp1"],"b":23787616,"m":"application/octet-stream","v":1},{"p":"split.wasm","u":["split.wasm.sp0","split.wasm.sp1"],"b":35739700,"m":"application/wasm","v":1}]};</script>
 <script>(function () {
   var M = window.SURD_GAME;
   var table = M && M.split;
@@ -304,6 +304,10 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
     var q = url.split('#')[0].split('?')[0];
     try { q = decodeURIComponent(q); } catch (e) {}
     q = q.replace(/^\.\//, '');
+    try {
+      var ext = M && M.ext;
+      if (ext && ext[q]) q = ext[q];
+    } catch (e) {}
     var hit = exact(q);
     return hit || virtualPart(q);
   }
@@ -455,7 +459,7 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
     for (i = 0; i < LANES && i < pf.length; i++) pump();
   }
 })();</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v339e1c6514/runtime.js"></script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v8caca1eedf/runtime.js"></script>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
