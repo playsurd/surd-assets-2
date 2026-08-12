@@ -280,7 +280,7 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
       });
     } catch(e){}
   })();</script>
-<script>window.SURD_GAME={"id":"soundboard","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/soundboard/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v339e1c6514/","files":{},"config":{},"split":[{"p":"media/sounds/spongebob-music_-grass-skirt-chase-1.mp3","u":["media/sounds/spongebob-music_-grass-skirt-chase-1.mp3"],"b":1113295,"m":"audio/mpeg","pf":1},{"p":"media/sounds/scheming-weasel-faster-1-mp3cutn-mp3cut.mp3","u":["media/sounds/scheming-weasel-faster-1-mp3cutn-mp3cut.mp3"],"b":1077839,"m":"audio/mpeg","pf":1},{"p":"media/sounds/tmp_v0ettio.mp3","u":["media/sounds/tmp_v0ettio.mp3"],"b":1021058,"m":"audio/mpeg","pf":1},{"p":"media/sounds/meme-okay-lets-go.mp3","u":["media/sounds/meme-okay-lets-go.mp3"],"b":1007390,"m":"audio/mpeg","pf":1},{"p":"media/sounds/12_3.mp3","u":["media/sounds/12_3.mp3"],"b":888030,"m":"audio/mpeg","pf":1},{"p":"media/sounds/risada-do-peludao-atumalaca.mp3","u":["media/sounds/risada-do-peludao-atumalaca.mp3"],"b":617694,"m":"audio/mpeg","pf":1},{"p":"media/sounds/french-meme-song.mp3","u":["media/sounds/french-meme-song.mp3"],"b":603324,"m":"audio/mpeg","pf":1}]};</script>
+<script>window.SURD_GAME={"id":"soundboard","engine":"generic","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/soundboard/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v8caca1eedf/","files":{},"config":{},"split":[{"p":"media/sounds/spongebob-music_-grass-skirt-chase-1.mp3","u":["media/sounds/spongebob-music_-grass-skirt-chase-1.mp3"],"b":1113295,"m":"audio/mpeg","pf":1},{"p":"media/sounds/scheming-weasel-faster-1-mp3cutn-mp3cut.mp3","u":["media/sounds/scheming-weasel-faster-1-mp3cutn-mp3cut.mp3"],"b":1077839,"m":"audio/mpeg","pf":1},{"p":"media/sounds/tmp_v0ettio.mp3","u":["media/sounds/tmp_v0ettio.mp3"],"b":1021058,"m":"audio/mpeg","pf":1},{"p":"media/sounds/meme-okay-lets-go.mp3","u":["media/sounds/meme-okay-lets-go.mp3"],"b":1007390,"m":"audio/mpeg","pf":1},{"p":"media/sounds/12_3.mp3","u":["media/sounds/12_3.mp3"],"b":888030,"m":"audio/mpeg","pf":1},{"p":"media/sounds/risada-do-peludao-atumalaca.mp3","u":["media/sounds/risada-do-peludao-atumalaca.mp3"],"b":617694,"m":"audio/mpeg","pf":1},{"p":"media/sounds/french-meme-song.mp3","u":["media/sounds/french-meme-song.mp3"],"b":603324,"m":"audio/mpeg","pf":1}]};</script>
 <script>(function () {
   var M = window.SURD_GAME;
   var table = M && M.split;
@@ -305,6 +305,10 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
     var q = url.split('#')[0].split('?')[0];
     try { q = decodeURIComponent(q); } catch (e) {}
     q = q.replace(/^\.\//, '');
+    try {
+      var ext = M && M.ext;
+      if (ext && ext[q]) q = ext[q];
+    } catch (e) {}
     var hit = exact(q);
     return hit || virtualPart(q);
   }
@@ -456,7 +460,7 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
     for (i = 0; i < LANES && i < pf.length; i++) pump();
   }
 })();</script>
-<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v339e1c6514/runtime.js"></script>
+<script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v8caca1eedf/runtime.js"></script>
 
     
     
