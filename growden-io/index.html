@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><title>growden-io</title><base href="https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/growden-io/">
-<script>(function () {
+<script data-surd="1">(function () {
   var W = window;
   var unityTarget = null;
   function tellUnity(methods, arg) {
@@ -146,7 +146,7 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
      * locally (both spongebob ports ship their own flambe.js). Left alone, each one is a request
      * that hangs until it times out; blocked, it fails instantly and the game gets on with it. */
     var DEAD = /(bbplayer\.net|cdn0\.kizi\.com|gmapi\.gamemix\.com|r3tq6l1\/gmsdk|candystand\.com|eags\.us|iep-esy\.ir|pegasgames\.com|ngames365\.github\.io|yurivish\.com|chicken\.royalredeemerlutheranschool\.org|marketjs-us\/en\/patch|cdn\.jsdelivr\.net\/discount\.json)/i;
-    var BAD = /(doubleclick|googlesyndication|googleadservices|googleads|adtrafficquality|2mdn\.net|imasdk\.googleapis|adsbygoogle|gamemonetize|fliplineads|cpmstar|ngads|adinplay|mochibot|mochiads|gamedistribution|azerioncircle|gamemonkey|scorecardresearch|moatads|amazon-adsystem|criteo|pubmatic|rubiconproject|adnxs|casalemedia|smartadserver|taboola|outbrain|google-analytics|googletagmanager|gameanalytics|cloud\.unity3d\.com|hotjar|mixpanel|clarity\.ms|enjoy4fun|gamebridge\.games|gamearter|poki\.io|famobi|softgames|yandex\.ru\/metrika|mc\.yandex)/i;
+    var BAD = /(doubleclick\.net|googlesyndication\.com|googleadservices\.com|googleads\.g\.doubleclick\.net|adtrafficquality\.google|2mdn\.net|imasdk\.googleapis\.com|adsbygoogle|google-analytics\.com|googletagmanager\.com|gstatic\.com\/firebasejs|gamemonetize\.com|fliplineads\.com|cpmstar\.com|ngads\.com|adinplay\.com|mochibot\.com|mochiads\.com|gamedistribution\.com|msgrt\.gamedistribution\.com|azerioncircle\.com|gamemonkey\.org|gameanalytics\.com|gamedock\.io|enjoy4fun\.com|gamebridge\.games|gamearter\.com|poki\.io|famobi\.com|softgames\.de|analytics\.shapez\.io|scorecardresearch\.com|moatads\.com|amazon-adsystem\.com|criteo|pubmatic|rubiconproject|adnxs\.com|casalemedia|smartadserver|taboola|outbrain|hotjar\.com|mixpanel|clarity\.ms|rudderlabs\.com|analytics\.tiktok\.com|connect\.facebook\.net|yandex\.ru\/metrika|mc\.yandex|cloud\.unity3d\.com|pushalert\.co|quizvana\.com|serviceclic\.com|atpnd\.com|r9x\.in|adsgram\.ai)/i;
     function bad(u){ try { var t = String(u); return BAD.test(t) || DEAD.test(t); } catch(e){ return false; } }
     /* HOST-ABSOLUTE PATHS: "/version.json", "/audio/x.flac".
      *
@@ -641,6 +641,6 @@ window.alert=function(){};window.confirm=function(){return false;};window.prompt
         navigator.serviceWorker.register('s/sw.js');
       });
     }</script>
-<script>window.SURD_GAME = {"id":"growden-io","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/growden-io/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v41e88dd3b6/","files":{"data":{"path":"Build/a7371a7fda98b71ac1cfdee56a79772b.data","bytes":11345084,"mime":"application/octet-stream"},"framework":{"path":"Build/713c295cbe0e74345cd32a235900a34f.framework.js","bytes":454997,"mime":"text/javascript"},"code":{"path":"Build/3ccec5462abb1bddeb508a23f3ef9d51.wasm","parts":[".sp0",".sp1"],"bytes":25728945,"mime":"application/wasm"}},"config":{"era":"modern","loaderJs":"Build/88e4e230596a7f739263fc16965e0da7.loader.js","companyName":"LEGiON Platforms","productName":"Growden.io","productVersion":"17z53627584"}};</script>
+<script data-surd="1">window.SURD_GAME = {"id":"growden-io","engine":"unity","base":"https://cdn.jsdelivr.net/gh/playsurd/surd-assets-2@main/growden-io/","runtime":"https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v41e88dd3b6/","files":{"data":{"path":"Build/a7371a7fda98b71ac1cfdee56a79772b.data","bytes":11345084,"mime":"application/octet-stream"},"framework":{"path":"Build/713c295cbe0e74345cd32a235900a34f.framework.js","bytes":454997,"mime":"text/javascript"},"code":{"path":"Build/3ccec5462abb1bddeb508a23f3ef9d51.wasm","parts":[".sp0",".sp1"],"bytes":25728945,"mime":"application/wasm"}},"config":{"era":"modern","loaderJs":"Build/88e4e230596a7f739263fc16965e0da7.loader.js","companyName":"LEGiON Platforms","productName":"Growden.io","productVersion":"17z53627584"}};</script>
 <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/playsurd/surd-runtime@main/v41e88dd3b6/runtime.js"></script>
 </body></html>
